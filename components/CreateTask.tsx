@@ -64,7 +64,7 @@ function CreateTask() {
             <label htmlFor="" className="font-semibold">
               Description
             </label>
-            <Textarea />
+            <Textarea className=" resize-none"/>
           </div>
           <div>
             <h3 className="font-semibold mb-3">Submusk</h3>
@@ -76,7 +76,7 @@ function CreateTask() {
                   alt="settings board"
                   width={100}
                   height={100}
-                  className=" w-4 "
+                  className=" w-4 cursor-pointer "
                 />
               </li>
               <li className="flex gap-3 items-center">
@@ -86,13 +86,13 @@ function CreateTask() {
                   alt="settings board"
                   width={100}
                   height={100}
-                  className=" w-4 "
+                  className=" w-4 cursor-pointer"
                 />
               </li>
             </ul>
             <Button
               type="button"
-              className="bg-primary text-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md h-12 w-full"
+              className="bg-primary text-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md w-full"
             >
               +add new submask
             </Button>
@@ -112,6 +112,12 @@ function CreateTask() {
               </SelectContent>
             </Select>
           </div>
+          <Button
+              type="button"
+              className="bg-primary text-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md w-full"
+            >
+              Create Task
+            </Button>
         </form>
       </DialogContent>
     </Dialog>
