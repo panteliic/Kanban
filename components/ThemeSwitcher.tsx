@@ -9,7 +9,7 @@ function ThemeSwitcher() {
   const lightMode = useSelector((state: RootState) => state.theme.lightMode);
 
   return (
-    <div className="bg-background w-5/6 m-auto flex items-center justify-center gap-4 p-3 rounded-lg shadow-md">
+    <div className="bg-secondary w-full md:w-5/6 m-auto flex items-center justify-center gap-4 p-3 rounded-lg shadow-md">
       <Image
         src="/assets/icon-light-theme.svg"
         alt="Light Mode"
