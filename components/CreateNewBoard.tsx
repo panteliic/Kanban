@@ -37,7 +37,7 @@ function CreateNewBoard() {
               </label>
               <Input type="text" />
             </div>
-            <div className="flex flex-col gap-4 ">
+            <div className="flex flex-col  gap-4 ">
               <label htmlFor="" className="font-semibold">
                 Columns
               </label>
