@@ -10,7 +10,7 @@ function Sidebar() {
   const [hidden, setHidden] = useState(false);
   return (
     <div
-      className={`h-[calc(100vh-6rem)] w-[20rem] bg-background border-r-2 border-border flex-col justify-between py-5 hidden md:flex transition-all ${
+      className={`h-[calc(100vh-6rem)] w-[20rem] bg-background border-r-2 border-border flex-col justify-between py-5 hidden md:flex transition-[width] ${
         hidden && "w-0 overflow-hidden border-r-0"
       }`}
     >

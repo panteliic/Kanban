@@ -64,7 +64,7 @@ function CreateTask() {
             <label htmlFor="" className="font-semibold">
               Description
             </label>
-            <Textarea />
+            <Textarea className=" resize-none"/>
           </div>
           <div>
             <h3 className="font-semibold mb-3">Submusk</h3>
