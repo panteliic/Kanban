@@ -1,4 +1,5 @@
-import React from "react";
+"use client"; 
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -20,11 +21,34 @@ import {
 } from "@/components/ui/select";
 
 function CreateTask() {
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      if (window.innerWidth <= 800) {
+        setMobile(true);
+      } else {
+        setMobile(false);
+      }
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
   return (
     <Dialog>
-      <DialogTrigger className="bg-primary text-primary-foreground flex justify-center items-center px-5 capitalize rounded-full text-lg h-12">
-        + add new task
-      </DialogTrigger>
+      {mobile ? (
+        <DialogTrigger className="bg-primary text-primary-foreground flex justify-center items-center px-5 capitalize rounded-full text-lg h-12">
+          +
+        </DialogTrigger>
+      ) : (
+        <DialogTrigger className="bg-primary text-primary-foreground flex justify-center items-center px-5 capitalize rounded-full text-lg h-12">
+          + add new task
+        </DialogTrigger>
+      )}
+
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New Task</DialogTitle>
@@ -66,7 +90,10 @@ function CreateTask() {
                 />
               </li>
             </ul>
-            <Button type="button" className="bg-primary text-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md h-12 w-full">
+            <Button
+              type="button"
+              className="bg-primary text-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md h-12 w-full"
+            >
               +add new submask
             </Button>
           </div>
