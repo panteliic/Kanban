@@ -46,13 +46,13 @@ function CreateNewBoard() {
             <div>
               <Button
                 type="button"
-                className="text-primary bg-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md h-12 w-full"
+                className="text-primary bg-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md w-full hover:opacity-80 hover:transition-all hover:bg-primary-foreground"
               >
                 +add new column
               </Button>
               <Button
                 type="button"
-                className="bg-primary text-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md h-12 w-full"
+                className="bg-primary text-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md w-full"
               >
                 create new board
               </Button>
