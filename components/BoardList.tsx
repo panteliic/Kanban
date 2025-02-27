@@ -1,6 +1,7 @@
 import React from "react";
 import SideBarButton from "./SideBarButton";
-import Image from "next/image";
+import CreateNewBoard from "./CreateNewBoard";
+
 
 function BoardList() {
   const boards = [
@@ -22,16 +23,7 @@ function BoardList() {
           />
         ))}
       </ul>
-      <h3 className="text-primary text-lg flex items-center gap-2 font-medium px-5 py-3 capitalize cursor-pointer hover:opacity-70 transition">
-        <Image
-          src={"/assets/icon-blue-board.svg"}
-          alt="board logo"
-          width={100}
-          height={100}
-          className="w-5"
-        />
-        + create new board
-      </h3>
+      <CreateNewBoard/>
     </div>
   );
 }

@@ -81,7 +81,7 @@ function Navbar() {
               <span className="cursor-pointer font-semibold capitalize text-muted-foreground transition hover:opacity-65">
                 edit board
               </span>
-              <span className="cursor-pointer font-semibold capitalize text-destructive transition hover:opacity-65">
+              <span className="cursor-pointer font-semibold capitalize text-red-500 transition hover:opacity-65">
                 delete board
               </span>
             </PopoverContent>
