@@ -23,7 +23,7 @@ function MobileTaskBoard() {
           className=" w-4 "
         />
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col gap-3 bg-background border-0 ml-100 mt-5 w-80 shadow-lg">
+      <PopoverContent className="flex flex-col gap-3 bg-background border-0  mt-7 w-80 shadow-lg px-0">
         <BoardList />
         <ThemeSwitcher />
       </PopoverContent>
