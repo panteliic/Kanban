@@ -1,28 +1,26 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { Draggable } from "@hello-pangea/dnd";
 
-type SortableItemProps = {
+type TaskCardProps = {
   id: string;
-  content?: string;
+  content: string;
+  index: number;
 };
 
-export default function SortableItem({ id, content }: SortableItemProps) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-  
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
+const TaskCard = ({ id, content, index }: TaskCardProps) => {
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="p-2 mt-2 bg-white rounded shadow cursor-pointer"
-    >
-      {content}
-    </div>
+    <Draggable draggableId={id} index={index}>
+      {(provided) => (
+        <div
+          className="bg-background w-full p-4 mb-4 rounded-md shadow-md"
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          {content}
+        </div>
+      )}
+    </Draggable>
   );
-}
+};
+
+export default TaskCard;

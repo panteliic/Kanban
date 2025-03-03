@@ -1,20 +1,30 @@
-import { SortableContext } from "@dnd-kit/sortable";
-import SortableItem from "./TaskCard";
+import { Droppable } from "@hello-pangea/dnd";
+import TaskCard from "./TaskCard";
 
 type ColumnProps = {
-  id: string;
-  tasks: { id: string; content: string }[];
+  columnId: string;
+  columnName: string;
+  tasks: Array<{ id: string; content: string }>;
 };
 
-export default function Column({ id, tasks }: ColumnProps) {
+const Column = ({ columnId, columnName, tasks }: ColumnProps) => {
   return (
-    <div className="w-64 p-4 bg-gray-200 rounded-lg">
-      <h2 className="font-bold text-lg capitalize">{id}</h2>
-      <SortableContext items={tasks.map((task) => task.id)}>
-        {tasks.map((task) => (
-          <SortableItem key={task.id} id={task.id} content={task.content} />
-        ))}
-      </SortableContext>
-    </div>
+    <Droppable droppableId={columnId}>
+      {(provided) => (
+        <div
+          className="w-full lg:w-96 text-foreground rounded-md"
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+        >
+          <h2 className="font-bold mb-4">{columnName}</h2>
+          {tasks.map((task, index) => (
+            <TaskCard key={task.id} id={task.id} content={task.content} index={index} />
+          ))}
+          {provided.placeholder}
+        </div>
+      )}
+    </Droppable>
   );
-}
+};
+
+export default Column;
