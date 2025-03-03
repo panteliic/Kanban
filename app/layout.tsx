@@ -28,13 +28,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen text-title`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} w-screen antialiased h-screen text-title overflow-hidden`}
+      >
         <Providers>
           <ThemeProvider>
             <Navbar />
             <div className="flex">
               <Sidebar />
-              <main className="flex-1">{children}</main>
+              <main className="flex-1">
+                {children}
+              </main>
             </div>
           </ThemeProvider>
         </Providers>

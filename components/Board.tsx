@@ -1,136 +1,75 @@
 'use client'
-import { useState, useEffect } from "react";
-import {
-  DndContext,
-  closestCorners,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragOverlay,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  arrayMove,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
+import { DragDropContext } from "@hello-pangea/dnd";
+import { useState } from "react";
 import Column from "./Column";
-import SortableItem from "./TaskCard";
-
-const initialColumns = ["todo", "doing", "done"] as const;
 
 type Task = {
   id: string;
   content: string;
 };
 
-type Columns = (typeof initialColumns)[number]
+type ColumnsData = {
+  [key: string]: Task[]; 
+};
 
-type TasksState = Record<Columns, Task[]>;
-
-const initialTasks: TasksState = {
+const initialData: ColumnsData = {
   todo: [
     { id: "1", content: "Task 1" },
     { id: "2", content: "Task 2" },
+    { id: "5", content: "Task 1" },
+    { id: "6", content: "Task 2" },
+    { id: "7", content: "Task 1" },
+    { id: "8", content: "Task 2" },
+    { id: "9", content: "Task 1" },
+    { id: "10", content: "Task 2" },
+    { id: "11", content: "Task 1" },
+    { id: "12", content: "Task 2" },
   ],
   doing: [{ id: "3", content: "Task 3" }],
   done: [{ id: "4", content: "Task 4" }],
 };
 
-export default function KanbanBoard() {
-  const [columns, setColumns] = useState([...initialColumns]);
-  const [tasks, setTasks] = useState<TasksState>(initialTasks);
-  const [activeId, setActiveId] = useState<string | null>(null);
+const KanbanBoard = () => {
+  const [tasks, setTasks] = useState<ColumnsData>(initialData);
 
-  const [isClient, setIsClient] = useState(false);
+  const onDragEnd = (result: any) => {
+    const { source, destination } = result;
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  function handleDragStart(event: any) {
-    setActiveId(event.active.id);
-  }
-
-  function handleDragEnd(event: any) {
-    const { active, over } = event;
-    if (!over) return;
-
+    if (!destination) return;
     if (
-      columns.includes(active.id as Columns) &&
-      columns.includes(over.id as Columns)
-    ) {
-      setColumns((prev) =>
-        arrayMove(
-          prev,
-          prev.indexOf(active.id as Columns),
-          prev.indexOf(over.id as Columns)
-        )
-      );
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    )
       return;
-    }
 
-    let sourceColumn: Columns | undefined;
-    let targetColumn: Columns | undefined;
+    const startColumn = tasks[source.droppableId];
+    const endColumn = tasks[destination.droppableId];
+    const [movedTask] = startColumn.splice(source.index, 1);
+    endColumn.splice(destination.index, 0, movedTask);
 
-    for (const column of columns) {
-      if (tasks[column].some((task) => task.id === active.id)) {
-        sourceColumn = column;
-      }
-      if (tasks[column].some((task) => task.id === over.id)) {
-        targetColumn = column;
-      }
-    }
-
-    if (!sourceColumn || !targetColumn || sourceColumn === targetColumn) return;
-
-    setTasks((prev) => {
-      const sourceTasks = [...prev[sourceColumn]];
-      const targetTasks = [...prev[targetColumn]];
-
-      const taskIndex = sourceTasks.findIndex((t) => t.id === active.id);
-      if (taskIndex === -1) return prev;
-
-      const [task] = sourceTasks.splice(taskIndex, 1);
-
-      targetTasks.push(task);
-
-      return {
-        ...prev,
-        [sourceColumn]: sourceTasks,
-        [targetColumn]: targetTasks,
-      };
+    setTasks({
+      ...tasks,
+      [source.droppableId]: startColumn,
+      [destination.droppableId]: endColumn,
     });
-  }
-
-  if (!isClient) {
-    return null;
-  }
+  };
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="flex space-x-4 p-4">
-        <SortableContext items={columns}>
-          {columns.map((column) => (
-            <Column key={column} id={column} tasks={tasks[column]} />
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div className="p-6 flex max-h-screen w-full overflow-x-auto">
+        <div className="flex gap-6 flex-col lg:flex-row w-full"> 
+          {Object.keys(tasks).map((columnId) => (
+            <Column
+              key={columnId}
+              columnId={columnId}
+              columnName={columnId.toUpperCase()}
+              tasks={tasks[columnId]}
+            />
           ))}
-        </SortableContext>
+        </div>
       </div>
-      <DragOverlay>
-        {activeId ? <SortableItem id={activeId} /> : null}
-      </DragOverlay>
-    </DndContext>
+    </DragDropContext>
   );
-}
+};
+
+export default KanbanBoard;
