@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DndContext,
   closestCorners,
@@ -24,7 +24,7 @@ type Task = {
   content: string;
 };
 
-type Columns = (typeof initialColumns)[number]; // "todo" | "doing" | "done"
+type Columns = (typeof initialColumns)[number]
 
 type TasksState = Record<Columns, Task[]>;
 
@@ -42,6 +42,12 @@ export default function KanbanBoard() {
   const [tasks, setTasks] = useState<TasksState>(initialTasks);
   const [activeId, setActiveId] = useState<string | null>(null);
 
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -57,7 +63,6 @@ export default function KanbanBoard() {
     const { active, over } = event;
     if (!over) return;
 
-    // Ako premestamo kolone
     if (
       columns.includes(active.id as Columns) &&
       columns.includes(over.id as Columns)
@@ -95,7 +100,6 @@ export default function KanbanBoard() {
 
       const [task] = sourceTasks.splice(taskIndex, 1);
 
-      // Ubacujemo zadatak na kraj ciljne kolone
       targetTasks.push(task);
 
       return {
@@ -104,6 +108,10 @@ export default function KanbanBoard() {
         [targetColumn]: targetTasks,
       };
     });
+  }
+
+  if (!isClient) {
+    return null;
   }
 
   return (
