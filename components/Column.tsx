@@ -1,20 +1,20 @@
-import Task from "./TaskCard";
+import { SortableContext } from "@dnd-kit/sortable";
+import SortableItem from "./TaskCard";
 
-const tasks = [
-  { id: "task-1", content: "Task 1" },
-  { id: "task-2", content: "Task 2" },
-  { id: "task-3", content: "Task 3" },
-];
+type ColumnProps = {
+  id: string;
+  tasks: { id: string; content: string }[];
+};
 
-export default function Column({ id }: { id: string }) {
+export default function Column({ id, tasks }: ColumnProps) {
   return (
-    <div className="w-1/3  p-4 rounded-md">
-      <h3 className="font-bold mb-4">{id}</h3>
-      <div className="space-y-4"> 
+    <div className="w-64 p-4 bg-gray-200 rounded-lg">
+      <h2 className="font-bold text-lg capitalize">{id}</h2>
+      <SortableContext items={tasks.map((task) => task.id)}>
         {tasks.map((task) => (
-          <Task key={task.id} task={task} />
+          <SortableItem key={task.id} id={task.id} content={task.content} />
         ))}
-      </div>
+      </SortableContext>
     </div>
   );
 }
