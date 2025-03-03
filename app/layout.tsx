@@ -4,7 +4,7 @@ import "./globals.css";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { Providers } from "./Providers";
-import ThemeProvider from "./ThemeProvider"; // Dodajemo ThemeProvider
+import ThemeProvider from "./ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +28,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen overflow-auto text-title`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen text-title`}>
         <Providers>
-          <ThemeProvider> {/* Omotaj sve u ThemeProvider */}
+          <ThemeProvider>
             <Navbar />
             <div className="flex">
               <Sidebar />
