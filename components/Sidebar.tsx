@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import SideBarButton from "./SideBarButton";
 import ThemeSwitcher from "./ThemeSwitcher";
 import BoardList from "./BoardList";
 import { Button } from "./ui/button";
@@ -29,7 +28,7 @@ function Sidebar() {
           <h3
             className="capitalize"
             onClick={() => {
-              setHidden(true); // Hide the sidebar when "Hide sidebar" is clicked
+              setHidden(true); 
             }}
           >
             hide sidebar
@@ -40,7 +39,7 @@ function Sidebar() {
         className={`absolute rounded-r-full bottom-3 ${
           !hidden ? "hidden" : ""
         }`}
-        onClick={() => setHidden(false)} // Show the sidebar when the button is clicked
+        onClick={() => setHidden(false)} 
       >
         <Image
           src="/assets/icon-show-sidebar.svg"

@@ -1,5 +1,5 @@
 "use client";
-import { DragDropContext, Droppable } from "@hello-pangea/dnd";
+import { DragDropContext } from "@hello-pangea/dnd";
 import { useState, useRef } from "react";
 import Column from "./Column";
 
