@@ -8,10 +8,11 @@ import { Button } from "./ui/button";
 
 function Sidebar() {
   const [hidden, setHidden] = useState(false);
+
   return (
     <div
-      className={`h-[calc(100vh-6rem)] w-[20rem] bg-background border-r-2 border-border flex-col justify-between py-5 hidden md:flex transition-[width] ${
-        hidden && "hidden w-0 overflow-hidden border-r-0"
+      className={`h-[calc(100vh-6rem)] hidden bg-background border-r-2 border-border flex-col justify-between py-5 md:flex transition-[width] ${
+        hidden ? "w-0 overflow-hidden border-none" : "w-[20rem]"
       }`}
     >
       <BoardList />
@@ -20,15 +21,15 @@ function Sidebar() {
         <div className="flex gap-1 text-muted-foreground m-auto justify-center cursor-pointer">
           <Image
             src="/assets/icon-hide-sidebar.svg"
-            alt="hide sidebar"
+            alt="show sidebar"
             width={24}
             height={24}
             className="cursor-pointer"
           />
           <h3
-            className=" capitalize"
+            className="capitalize"
             onClick={() => {
-              setHidden(!hidden)
+              setHidden(true); // Hide the sidebar when "Hide sidebar" is clicked
             }}
           >
             hide sidebar
@@ -36,8 +37,10 @@ function Sidebar() {
         </div>
       </div>
       <Button
-        className={`absolute rounded-r-full bottom-3 ${!hidden && "hidden"}`}
-        onClick={() => setHidden(!hidden)}
+        className={`absolute rounded-r-full bottom-3 ${
+          !hidden ? "hidden" : ""
+        }`}
+        onClick={() => setHidden(false)} // Show the sidebar when the button is clicked
       >
         <Image
           src="/assets/icon-show-sidebar.svg"
