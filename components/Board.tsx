@@ -1,5 +1,5 @@
 "use client";
-import { DragDropContext } from "@hello-pangea/dnd";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useState, useRef } from "react";
 import Column from "./Column";
 
@@ -84,7 +84,7 @@ const KanbanBoard = () => {
     isDragging.current = false;
   };
 
-  const onDragEnd = (result: any) => {
+  const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
 
     if (!destination) return;
