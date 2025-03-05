@@ -49,7 +49,7 @@ const Column = ({ columnId, columnName, tasks }: ColumnProps) => {
     <Droppable droppableId={columnId}>
       {(provided) => (
         <div
-          className="w-96 text-foreground rounded-md p-4 bg-secondary"
+          className="w-80 text-foreground rounded-md p-2 bg-secondary"
           ref={provided.innerRef}
           {...provided.droppableProps}
         >

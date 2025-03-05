@@ -117,7 +117,7 @@ const KanbanBoard = () => {
         onMouseLeave={handleMouseUp}
       >
         <div className="h-[calc(100vh-6rem)]">
-          <div className="flex gap-6 flex-nowrap w-max p-6">
+          <div className="flex gap-4 flex-nowrap w-max p-6">
             {Object.keys(tasks).map((columnId) => (
               <Column
                 key={columnId}
@@ -126,7 +126,7 @@ const KanbanBoard = () => {
                 tasks={tasks[columnId]}
               />
             ))}
-            <div className="w-96 h-screen p-8">
+            <div className="w-80 h-screen p-4">
               <div className="w-full h-screen text-muted-foreground text-3xl font-semibold rounded-md p-4 bg-gradient-to-b from-background to-secondary flex items-center justify-center cursor-pointer ">
                 + New Column
               </div>
