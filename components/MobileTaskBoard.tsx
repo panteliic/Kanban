@@ -1,12 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Image from "next/image";
-import { Sidebar } from "lucide-react";
 import BoardList from "./BoardList";
 import ThemeSwitcher from "./ThemeSwitcher";
 
