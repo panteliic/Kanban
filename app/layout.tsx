@@ -29,16 +29,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} w-screen antialiased h-screen text-title overflow-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} w-screen max-w-[1920px] antialiased h-screen text-title overflow-hidden m-auto bg-muted`}
       >
         <Providers>
           <ThemeProvider>
             <Navbar />
-            <div className="flex">
-              <Sidebar />
-              <main className="flex-1">
-                {children}
-              </main>
+            <div className="flex justify-center w-full h-full"> 
+              <div className="w-full mx-auto flex">
+                <Sidebar />
+                <main className="flex-1 overflow-auto">
+                  {children}
+                </main>
+              </div>
             </div>
           </ThemeProvider>
         </Providers>

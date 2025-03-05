@@ -29,7 +29,7 @@ function Navbar() {
   }, []);
 
   return (
-    <div className="w-screen h-24 border-b-2 border-border bg-background flex items-center justify-between">
+    <div className="w-full h-24 border-b-2 border-border bg-background flex items-center justify-between">
       <div className="w-auto md:w-[20rem] h-full border-0 md:border-r-2 border-border flex items-center px-5">
         {mobile ? (
           <div className="flex items-center gap-4">

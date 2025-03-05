@@ -12,7 +12,7 @@ function BoardList() {
   return (
     <div>
       <h3 className="text-muted-foreground font-medium uppercase px-5 mb-5">
-        all boards(3)
+        all boards (3)
       </h3>
       <ul>
         {boards.map((board, index) => (

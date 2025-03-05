@@ -1,12 +1,23 @@
 import { Draggable } from "@hello-pangea/dnd";
 
-type TaskCardProps = {
+type Subtask = {
   id: string;
   content: string;
+  completed?: boolean;
+};
+
+type Task = {
+  id: string;
+  content: string;
+  subtasks: Subtask[];
   index: number;
 };
 
-const TaskCard = ({ id, content, index }: TaskCardProps) => {
+const TaskCard = ({ id, content, subtasks, index }: Task) => {
+  const completedSubtasks = subtasks.filter(
+    (subtask) => subtask.completed
+  ).length;
+
   return (
     <Draggable draggableId={id} index={index}>
       {(provided) => (
@@ -16,7 +27,11 @@ const TaskCard = ({ id, content, index }: TaskCardProps) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          {content}
+          <div className="text-foreground">{content}</div>
+
+          <div className="mt-2 text-sm text-[#828fa3]">
+            {completedSubtasks} of {subtasks.length} subtasks
+          </div>
         </div>
       )}
     </Draggable>

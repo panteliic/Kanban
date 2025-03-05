@@ -11,7 +11,7 @@ function Sidebar() {
   return (
     <div
       className={`h-[calc(100vh-6rem)] w-[20rem] bg-background border-r-2 border-border flex-col justify-between py-5 hidden md:flex transition-[width] ${
-        hidden && "w-0 overflow-hidden border-r-0"
+        hidden && "hidden w-0 overflow-hidden border-r-0"
       }`}
     >
       <BoardList />
@@ -28,7 +28,7 @@ function Sidebar() {
           <h3
             className=" capitalize"
             onClick={() => {
-              setHidden(!hidden);
+              setHidden(!hidden)
             }}
           >
             hide sidebar
