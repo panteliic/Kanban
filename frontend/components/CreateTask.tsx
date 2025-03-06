@@ -24,7 +24,7 @@ function CreateTask() {
 
   useEffect(() => {
     const checkScreenSize = () => {
-      if (window.innerWidth <= 800) {
+      if (window.innerWidth <= 850) {
         setMobile(true);
       } else {
         setMobile(false);
