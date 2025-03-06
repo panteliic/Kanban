@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Popover,
   PopoverContent,
@@ -11,7 +10,7 @@ import CreateTask from "./CreateTask";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import MobileTaskBoard from "./MobileTaskBoard";
-
+import UserProfile from "./UserProfile";
 
 function Navbar() {
   const lightMode = useSelector((state: RootState) => state.theme.lightMode);
@@ -85,11 +84,9 @@ function Navbar() {
               </span>
             </PopoverContent>
           </Popover>
-
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <div className="hidden md:flex w-auto">
+            <UserProfile text={false} />
+          </div>
         </div>
       </div>
     </div>
