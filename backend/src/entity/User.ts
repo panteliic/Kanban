@@ -1,18 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { RefreshToken } from "./RefreshToken";
 
-@Entity()
-export class User {
+@Entity("users")
+export class Users {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-    @PrimaryGeneratedColumn()
-    id: number
+  @Column({ unique: true })
+  googleId: string;
 
-    @Column()
-    firstName: string
+  @Column({ unique: true })
+  email: string;
 
-    @Column()
-    lastName: string
+  @Column()
+  name: string;
 
-    @Column()
-    age: number
+  @Column({ nullable: true })
+  avatar: string;
 
+  @OneToMany(() => RefreshToken, (token) => token.user)
+  refreshTokens: RefreshToken[];
 }
