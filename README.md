@@ -54,11 +54,11 @@ This project is built with **Next.js** on the frontend for server-side rendering
    CLIENT_SECRET=your-google-client-secret
    DB_HOST=localhost
    DB_PORT=5432
-   DB_USER=postgres
-   DB_PASSWORD=password
-   DB_NAME=kanban
-   JWT_ACCESS_SECRET=your-jwt-secret
-   JWT_REFRESH_SECRET=your-refresh-jwt-secret
+   DB_USER=<YOUR_USERNAME>
+   DB_PASSWORD=<YOUR_PASSWORD>
+   DB_NAME=<YOUR_DATABASE_NAME>
+   JWT_ACCESS_SECRET=<YOUR_ACCEES_JWT_SECRET>
+   JWT_REFRESH_SECRET=<YOUR_REFRESH_JWT_SECRET>
    ```
 
 3. **Run the backend server:**
