@@ -18,7 +18,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(passport)
+app.use(passport.initialize())
 
 app.get("/", (req, res) => {
   res.send("Hello, World! TypeORM is connected.");

@@ -11,8 +11,6 @@ export const googleAuthCallback = (req: any, res: Response) => {
 
   res.cookie("accessToken", accessToken, { httpOnly: true, secure: true, sameSite: "strict" });
   res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true, sameSite: "strict" });
-
-  res.redirect("/dashboard");
 };
 
 export const refreshAccessToken = async (req: Request, res: Response) => {
