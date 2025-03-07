@@ -50,8 +50,8 @@ This project is built with **Next.js** on the frontend for server-side rendering
    Create a `.env` file in the backend directory and add the following variables:
 
    ```ini
-   CLIENT_ID=your-google-client-id
-   CLIENT_SECRET=your-google-client-secret
+   CLIENT_ID=<YOUR_GOOGLE_CLIENT_ID>
+   CLIENT_SECRET=<YOUR_GOOGLE_CLIENT_SECRET>
    DB_HOST=localhost
    DB_PORT=5432
    DB_USER=<YOUR_USERNAME>
