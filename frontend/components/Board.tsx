@@ -1,4 +1,5 @@
 "use client";
+
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useState, useRef } from "react";
 import Column from "./Column";
@@ -49,42 +50,15 @@ const initialData: ColumnsData = {
 
 const KanbanBoard = () => {
   const [tasks, setTasks] = useState<ColumnsData>(initialData);
-
+  const [isDragging, setIsDragging] = useState(false);
   const boardRef = useRef<HTMLDivElement | null>(null);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const startY = useRef(0);
-  const scrollLeft = useRef(0);
-  const scrollTop = useRef(0);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!boardRef.current) return;
-    if (e.target instanceof HTMLElement && e.target.closest(".task-card"))
-      return;
-
-    isDragging.current = true;
-    startX.current = e.pageX - boardRef.current.offsetLeft;
-    startY.current = e.pageY - boardRef.current.offsetTop;
-    scrollLeft.current = boardRef.current.scrollLeft;
-    scrollTop.current = boardRef.current.scrollTop;
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging.current || !boardRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - boardRef.current.offsetLeft;
-    const y = e.pageY - boardRef.current.offsetTop;
-    const walkX = x - startX.current;
-    const walkY = y - startY.current;
-    boardRef.current.scrollLeft = scrollLeft.current - walkX;
-    boardRef.current.scrollTop = scrollTop.current - walkY;
-  };
-
-  const handleMouseUp = () => {
-    isDragging.current = false;
+  const onDragStart = () => {
+    setIsDragging(true);
   };
 
   const onDragEnd = (result: DropResult) => {
+    setIsDragging(false);
     const { source, destination } = result;
 
     if (!destination) return;
@@ -94,8 +68,8 @@ const KanbanBoard = () => {
     )
       return;
 
-    const startColumn = tasks[source.droppableId];
-    const endColumn = tasks[destination.droppableId];
+    const startColumn = [...tasks[source.droppableId]];
+    const endColumn = [...tasks[destination.droppableId]];
     const [movedTask] = startColumn.splice(source.index, 1);
     endColumn.splice(destination.index, 0, movedTask);
 
@@ -107,14 +81,10 @@ const KanbanBoard = () => {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
       <div
-        className="bg-secondary overflow-x-auto cursor-move active:cursor-move select-none"
+        className={`bg-secondary overflow-x-auto cursor-move select-none ${isDragging ? "overflow-hidden" : ""}`}
         ref={boardRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
       >
         <div className="h-[calc(100vh-6rem)]">
           <div className="flex gap-4 flex-nowrap w-max p-6">
