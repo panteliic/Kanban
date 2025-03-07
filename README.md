@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kanban – Project Management System
 
-## Getting Started
+## Overview
 
-First, run the development server:
+The Kanban Project Management System is a full-stack application designed to help teams organize tasks efficiently using the Kanban methodology. The application offers features such as task organization, drag-and-drop functionality for seamless workflow management, and secure authentication using JWT tokens.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project is built with **Next.js** on the frontend for server-side rendering (SSR) and **Node.js/Express** on the backend for API and business logic. **PostgreSQL** is used for the database, and **TypeORM** is leveraged for ORM-based database management.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Task Organization**: Easily organize tasks into columns like *To-Do*, *In Progress*, and *Completed*.
+- **Drag-and-Drop Functionality**: Move tasks between columns smoothly to reflect changes in status.
+- **JWT Authentication**: Secure user authentication system with access and refresh tokens for authorization.
+- **Real-Time Collaboration**: Share the Kanban board with teammates and stay in sync with live updates.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Technologies Used
 
-## Learn More
+### Frontend
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js**: React framework with server-side rendering for fast performance and SEO.
+- **React**: JavaScript library for building user interfaces.
+- **Tailwind CSS**: Utility-first CSS framework for fast styling.
+- **TypeScript**: Superset of JavaScript that provides optional static typing.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Backend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Node.js**: JavaScript runtime environment for the backend.
+- **Express**: Minimal and flexible Node.js web application framework.
+- **PostgreSQL**: Relational database management system.
+- **TypeORM**: ORM for managing PostgreSQL database with TypeScript support.
+- **JWT (JSON Web Tokens)**: Used for user authentication and authorization.
 
-## Deploy on Vercel
+### Other Tools
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Passport.js**: Authentication middleware for handling OAuth with Google.
+- **Nodemon**: Tool that automatically restarts the backend server during development.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Installation & Setup
+
+### Backend
+## Backend Setup
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Set up environment variables:**
+
+   Create a `.env` file in the backend directory and add the following variables:
+
+   ```ini
+   CLIENT_ID=your-google-client-id
+   CLIENT_SECRET=your-google-client-secret
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USER=postgres
+   DB_PASSWORD=password
+   DB_NAME=kanban
+   JWT_ACCESS_SECRET=your-jwt-secret
+   JWT_REFRESH_SECRET=your-refresh-jwt-secret
+   ```
+
+3. **Run the backend server:**
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## Frontend Setup
+
+1. **Change to the frontend directory:**
+   ```bash
+   cd ../frontend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Run the frontend server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open the app in your browser:**
+   Navigate to [http://localhost:3000](http://localhost:3000).
+
+---
+
+## Usage
+
+- **Sign up and log in:** Users can sign up and log in using their Google account for authentication.
+- **Create, update, and delete tasks:** Organize tasks into different columns, update their details, or delete tasks that are no longer needed.
+- **Drag and drop tasks:** Move tasks between columns to reflect their current status.
+- **Authentication:** Use JWT for secure user authentication.
