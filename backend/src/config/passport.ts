@@ -13,7 +13,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
+      callbackURL: "/api/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -27,6 +27,7 @@ passport.use(
             name: profile.displayName,
             avatar: profile.photos?.[0]?.value,
           });
+          
           await userRepository.save(user);
         }
         const tokens = await generateTokens(user);

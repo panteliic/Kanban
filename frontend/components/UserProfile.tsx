@@ -4,6 +4,9 @@ import { Button } from "./ui/button";
 
 function UserProfile({ text }: { text: boolean }) {
   const auth = false;
+  const login = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+  };
   return (
     <>
       {auth ? (
@@ -20,7 +23,12 @@ function UserProfile({ text }: { text: boolean }) {
           {text && <span>Nikola Pantelic</span>}
         </div>
       ) : (
-        <Button className="w-5/6 md:w-full m-auto bg-primary text-primary-foreground flex justify-center items-center px-5 capitalize text-lg h-12 font-normal" >Sign in</Button>
+        <Button
+          className="w-5/6 md:w-full m-auto bg-primary text-primary-foreground flex justify-center items-center px-5 capitalize text-lg h-12 font-normal"
+          onClick={login}
+        >
+          Sign in
+        </Button>
       )}
     </>
   );
