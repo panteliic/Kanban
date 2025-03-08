@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 import { AppDataSource } from "../data-source";
 import { RefreshToken } from "../entity/RefreshToken";
 import { Users } from "../entity/User";
@@ -14,11 +14,12 @@ export const generateTokens = async (user: Users) => {
     expiresIn: "7d",
   });
 
-  // Sačuvaj refresh token u bazu
   const refreshTokenRepo = AppDataSource.getRepository(RefreshToken);
-  const newRefreshToken = refreshTokenRepo.create({ token: refreshToken, user });
+  const newRefreshToken = refreshTokenRepo.create({
+    token: refreshToken,
+    user,
+  });
   await refreshTokenRepo.save(newRefreshToken);
 
   return { accessToken, refreshToken };
 };
-
