@@ -4,7 +4,6 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { AppDataSource } from "../data-source";
 import { Users } from "../entity/User";
 import { generateTokens } from "../utils/generateToken";
-import { RefreshToken } from "../entity/RefreshToken";
 
 dotenv.config();
 
