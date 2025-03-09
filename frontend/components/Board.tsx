@@ -26,7 +26,7 @@ const initialData: ColumnsData = {
       id: "1",
       content: "Task 1",
       subtasks: [
-        { id: "1-1", content: "Subtask 1" },
+        { id: "1-1", content: "Subtask 11" },
         { id: "1-2", content: "Subtask 2" },
       ],
     },
