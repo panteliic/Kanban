@@ -1,23 +1,54 @@
 import axios from "axios";
 import { store } from "../store";
-import { setAccessToken } from "../store/authSlice";
+import { logout, setAccessToken } from "../redux/authSlice"; 
 
-const api = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL });
+const axiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
+});
 
-api.interceptors.response.use(
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const state = store.getState();
+    const token = state.auth.accessToken; 
+
+  
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    console.log(token, config);
+    
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response.status === 401) {
-      const refreshResponse = await axios.post("/api/refresh", {}, { withCredentials: true });
+    const originalRequest = error.config;
+    
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-      if (refreshResponse.status === 200) {
-        store.dispatch(setAccessToken(refreshResponse.data.accessToken));
-        error.config.headers["Authorization"] = `Bearer ${refreshResponse.data.accessToken}`;
-        return api(error.config);
+      try {
+        console.log("Token is expired, trying to refresh...");
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+          withCredentials: true, 
+        });
+        console.log("New access token: ", data.accessToken);
+
+        store.dispatch(setAccessToken(data.accessToken)); 
+        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        return axiosInstance(originalRequest); 
+      } catch (refreshError) {
+        console.log("Refresh failed, logging out...");
+        store.dispatch(logout()); 
+        return Promise.reject(refreshError);
       }
     }
+
     return Promise.reject(error);
   }
 );
-
-export default api;
+export default axiosInstance;

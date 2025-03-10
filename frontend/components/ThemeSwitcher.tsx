@@ -1,6 +1,6 @@
 "use client";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleTheme } from "@/store/themeSlice";
+import { toggleTheme } from "@/redux/themeSlice";
 import { RootState } from "@/store";
 import Image from "next/image";
 

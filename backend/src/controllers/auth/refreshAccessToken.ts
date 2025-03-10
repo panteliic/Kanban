@@ -15,7 +15,9 @@ export const refreshAccessToken = async (req, res) => {
     const user = await verifyRefreshToken(refreshToken);
 
     if (!user || !user.id) {
-      await AppDataSource.getRepository(RefreshToken).delete({ token: refreshToken });
+      await AppDataSource.getRepository(RefreshToken).delete({
+        token: refreshToken,
+      });
       res.clearCookie("refreshToken");
       return res.status(403).json({ message: "Invalid refresh token" });
     }
@@ -25,11 +27,10 @@ export const refreshAccessToken = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      expires: new Date(Date.now() + 1000 * 60 * 15), 
+      expires: new Date(Date.now() + 1000 * 60 * 15),
     });
 
     res.json({ accessToken: tokens.accessToken });
-
   } catch (error) {
     console.error("Error refreshing access token:", error);
     res.status(500).json({ message: "Internal Server Error" });
