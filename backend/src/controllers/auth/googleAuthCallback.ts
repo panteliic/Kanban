@@ -10,14 +10,12 @@ export const googleAuthCallback = async (req: any, res: Response) => {
       return res.redirect(`${process.env.CLIENT_URL}/auth/sign-in`);
     }
 
-    const { user, refreshToken } = req.user;
+    const { user } = req.user;
 
-    const { accessToken, refreshToken: newRefreshToken } = await generateTokens(
-      user
-    );
+    const { accessToken, refreshToken } = await generateTokens(user);
 
     await AppDataSource.getRepository(RefreshToken).save({
-      token: newRefreshToken,
+      token: refreshToken,
       user: user,
     });
 
@@ -28,16 +26,12 @@ export const googleAuthCallback = async (req: any, res: Response) => {
       expires: new Date(Date.now() + 1000 * 60 * 15),
     });
 
-    res.cookie("refreshToken", newRefreshToken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     });
-    console.log(accessToken, newRefreshToken);
-
-    console.log(`User authenticated: ${user.email} (ID: ${user.id})`);
-
     res.redirect(`${process.env.CLIENT_URL}`);
   } catch (error) {
     console.error("Google Callback Error:", error);

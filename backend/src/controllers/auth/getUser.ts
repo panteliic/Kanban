@@ -2,12 +2,14 @@ import { Request, Response } from "express";
 import { verifyRefreshToken } from "../../utils/verifyRefreshToken";
 import { AppDataSource } from "../../data-source";
 import { RefreshToken } from "../../entity/RefreshToken";
+import { log } from "node:console";
 
 export const user = async (req, res) => {
   try {
+    const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
-
-    if (!refreshToken) {
+    
+    if (!accessToken) {
       return await res.status(401).json({ message: "No refresh token" });
     }
 
