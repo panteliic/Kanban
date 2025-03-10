@@ -12,9 +12,6 @@ import {
 } from "./ui/dropdown-menu";
 
 function UserProfile({ text }: { text: boolean }) {
-  const login = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
-  };
   const user = useSelector((state: RootState) => state.auth.user);
   const getInitials = (name: string | undefined): string => {
     if (!name) return "";
