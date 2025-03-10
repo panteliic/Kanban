@@ -13,20 +13,18 @@ export default function Home() {
   const user = useSelector((state: RootState) => state.auth.user);
   const [loading, setLoading] = useState(true);
 
-  
   useEffect(() => {
     if (!user) {
       const fetchUser = async () => {
         try {
           const { data } = await api.get("/auth/user");
           dispatch(setUser(data.user));
-        } catch (error) {
+        } catch {
           router.push("/auth/sign-in");
         } finally {
           setLoading(false);
         }
       };
-
       fetchUser();
     } else {
       setLoading(false);
@@ -35,6 +33,5 @@ export default function Home() {
 
   if (loading) return <p>Loading...</p>;
 
-  
   return <KanbanBoard />;
 }
