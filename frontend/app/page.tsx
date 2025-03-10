@@ -35,6 +35,7 @@ export default function Home() {
   }, [user, dispatch, router]);
 
   if (loading) return <p>Loading...</p>;
+
   
   return <KanbanBoard />;
 }
