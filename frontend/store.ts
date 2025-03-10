@@ -1,7 +1,7 @@
 // store/index.ts
 import { configureStore } from "@reduxjs/toolkit";
-import themeReducer from "./store/themeSlice";
-import authReducer from "./store/authSlice";
+import themeReducer from "./redux/themeSlice";
+import authReducer from "./redux/authSlice";
 export const store = configureStore({
   reducer: {
     theme: themeReducer,
