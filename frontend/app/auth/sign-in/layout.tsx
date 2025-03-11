@@ -3,5 +3,5 @@ export default function AuthLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main className="flex-1 overflow-auto">gas{children}</main>;
+  return <main className="flex-1 overflow-auto">{children}</main>;
 }
