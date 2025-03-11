@@ -1,21 +1,21 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import api from "@/utils/api";
 import KanbanBoard from "@/components/Board";
 import { RootState } from "@/store";
 import { setUser } from "@/redux/authSlice";
-import Loading from "@/components/Loading";
+import { setLoading } from "@/redux/LoadingSlice";
 
 export default function Home() {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) {
+      dispatch(setLoading(true));
       const fetchUser = async () => {
         try {
           const { data } = await api.get("/auth/user");
@@ -23,16 +23,14 @@ export default function Home() {
         } catch {
           router.push("/auth/sign-in");
         } finally {
-          setLoading(false);
+          dispatch(setLoading(false));
         }
       };
       fetchUser();
     } else {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   }, [user, dispatch, router]);
-
-  if (loading) return <Loading />;
 
   return <KanbanBoard />;
 }
