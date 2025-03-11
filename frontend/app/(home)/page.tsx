@@ -6,6 +6,7 @@ import api from "@/utils/api";
 import KanbanBoard from "@/components/Board";
 import { RootState } from "@/store";
 import { setUser } from "@/redux/authSlice";
+import Loading from "@/components/Loading";
 
 export default function Home() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function Home() {
     }
   }, [user, dispatch, router]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loading />;
 
   return <KanbanBoard />;
 }
