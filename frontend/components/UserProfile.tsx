@@ -1,7 +1,9 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
+import { logout } from "@/redux/authSlice";
+import api from "@/utils/api";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,14 +12,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
 function UserProfile({ text }: { text: boolean }) {
+  const router = useRouter();
+  const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
+
   const getInitials = (name: string | undefined): string => {
     if (!name) return "";
     const nameParts = name.split(" ");
     const initials = nameParts.map((part) => part[0]).join("");
     return initials.toUpperCase();
+  };
+
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout");
+      dispatch(logout());
+      router.push("/auth/sign-in");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
@@ -46,11 +62,14 @@ function UserProfile({ text }: { text: boolean }) {
             <span>{user?.name}</span>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator className="bg-border"/>
+        <DropdownMenuSeparator className="bg-border" />
         <DropdownMenuItem className="cursor-pointer py-2">
           Profile
         </DropdownMenuItem>
-        <DropdownMenuItem className=" text-red-500 hover:text-red-500 cursor-pointer py-2">
+        <DropdownMenuItem
+          onClick={handleLogout}
+          className="text-red-500 hover:text-red-500 cursor-pointer py-2"
+        >
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
