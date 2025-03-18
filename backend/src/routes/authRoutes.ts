@@ -8,7 +8,7 @@ const passport = require("passport");
 const router = Router();
 
 router.get(
-  "/api/auth/google",
+  "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
     accessType: "offline",
@@ -17,7 +17,7 @@ router.get(
 );
 
 router.get(
-  "/api/auth/google/callback",
+  "/google/callback",
   passport.authenticate("google", {
     failureRedirect: "/auth/sign-in",
     session: false,
@@ -25,8 +25,8 @@ router.get(
   googleAuthCallback
 );
 
-router.get("/api/auth/user", user);
-router.get("/api/auth/refresh",refreshAccessToken);
-router.post("/api/auth/logout", logout);
+router.get("/user", user);
+router.get("/refresh",refreshAccessToken);
+router.post("/logout", logout);
 
 export default router;
