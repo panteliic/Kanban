@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { RefreshToken } from "./RefreshToken";
+import { Board } from "./Board";
 
 @Entity("users")
 export class Users {
@@ -20,4 +21,7 @@ export class Users {
 
   @OneToMany(() => RefreshToken, (token) => token.user)
   refreshTokens: RefreshToken[];
+
+  @OneToMany(() => Board, (board) => board.user, { cascade: true })
+  boards: Board[];
 }
