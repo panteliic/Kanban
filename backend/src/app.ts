@@ -5,6 +5,7 @@ const cors = require("cors");
 var cookieParser = require("cookie-parser");
 
 import authRoutes from "./routes/authRoutes";
+import boardRoutes from "./routes/boardRoutes";
 
 const app = express();
 
@@ -18,12 +19,13 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(passport.initialize())
+app.use(passport.initialize());
 
 app.get("/", (req, res) => {
   res.send("Hello, World! TypeORM is connected.");
 });
 
-app.use(authRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/boards", boardRoutes);
 
 export default app;
