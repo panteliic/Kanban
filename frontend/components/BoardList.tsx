@@ -6,6 +6,7 @@ import CreateNewBoard from "./CreateNewBoard";
 import { RootState } from "@/store";
 import { setLoading } from "@/redux/LoadingSlice";
 import { setBoards } from "@/redux/boardSlice";
+import { usePathname } from "next/navigation";
 
 interface Board {
   id: string;
@@ -17,8 +18,11 @@ function BoardList() {
   const boards = useSelector((state: RootState) => state.board.boards);
   const userId = user?.id;
   const dispatch = useDispatch();
+  const pathname = usePathname();
 
   useEffect(() => {
+    console.log(pathname);
+    
     if (!userId || boards.length > 0) return; 
 
     const fetchBoards = async () => {
@@ -41,7 +45,7 @@ function BoardList() {
     };
 
     fetchBoards();
-  }, [userId, dispatch, boards.length]); 
+  }, [userId, dispatch, boards.length,pathname]); 
 
   return (
     <div>
