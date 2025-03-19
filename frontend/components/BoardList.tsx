@@ -7,30 +7,42 @@ import { RootState } from "@/store";
 import { setLoading } from "@/redux/LoadingSlice";
 import { setBoards } from "@/redux/boardSlice";
 
+interface Board {
+  id: string;
+  title: string;
+}
+
 function BoardList() {
-  const boards = useSelector((state: RootState) => state.board.boards);
   const user = useSelector((state: RootState) => state.auth.user);
+  const boards = useSelector((state: RootState) => state.board.boards);
   const userId = user?.id;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!userId || boards.length > 0) return;
+    if (!userId) return;
+    if (boards.length > 0) return;
 
     const fetchBoards = async () => {
       dispatch(setLoading(true));
 
       try {
-        const response = await api.get(`/boards/getBoards/${userId}`);
-        dispatch(setBoards(response.data || []));
+        const response = await api.get<Board[]>("/boards/getBoards/" + userId);
+
+        if (Array.isArray(response.data)) {
+          dispatch(setBoards(response.data));
+        } else {
+          dispatch(setBoards([])); 
+        }
       } catch (err) {
         console.error("Error fetching boards:", err);
+        dispatch(setBoards([])); 
       } finally {
         dispatch(setLoading(false));
       }
     };
 
     fetchBoards();
-  }, [userId, boards.length, dispatch]);
+  }, [userId, dispatch, boards.length]);
 
   return (
     <div>
@@ -39,11 +51,7 @@ function BoardList() {
       </h3>
       <ul>
         {boards.map((board) => (
-          <SideBarButton
-            key={board.id}
-            boardName={board.title}
-            active={false}
-          />
+          <SideBarButton key={board.id} boardName={board.title} active={false} />
         ))}
       </ul>
       <CreateNewBoard />

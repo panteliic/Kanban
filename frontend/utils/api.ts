@@ -16,7 +16,6 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    console.log(token, config);
     
     return config;
   },
@@ -36,8 +35,6 @@ axiosInstance.interceptors.response.use(
         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
           withCredentials: true, 
         });
-        console.log("New access token: ", data.accessToken);
-
         store.dispatch(setAccessToken(data.accessToken)); 
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
         return axiosInstance(originalRequest); 
