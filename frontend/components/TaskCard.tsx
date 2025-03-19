@@ -2,18 +2,18 @@ import { Draggable } from "@hello-pangea/dnd";
 
 type Subtask = {
   id: string;
-  content: string;
+  title: string;
   completed?: boolean;
 };
 
 type Task = {
   id: string;
-  content: string;
+  title: string;
   subtasks: Subtask[];
   index: number;
 };
 
-const TaskCard = ({ id, content, subtasks, index }: Task) => {
+const TaskCard = ({ id, title, subtasks, index }: Task) => {
   const completedSubtasks = subtasks.filter(
     (subtask) => subtask.completed
   ).length;
@@ -27,7 +27,7 @@ const TaskCard = ({ id, content, subtasks, index }: Task) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <div className="text-foreground">{content}</div>
+          <div className="text-foreground">{title}</div>
 
           <div className="mt-2 text-sm text-[#828fa3]">
             {completedSubtasks} of {subtasks.length} subtasks

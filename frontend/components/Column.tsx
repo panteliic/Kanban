@@ -3,13 +3,13 @@ import TaskCard from "./TaskCard";
 
 type Subtask = {
   id: string;
-  content: string;
+  title: string;
   completed?: boolean;
 };
 
 type Task = {
   id: string;
-  content: string;
+  title: string;
   subtasks: Subtask[];
   index?: number;
 };
@@ -64,7 +64,7 @@ const Column = ({ columnId, columnName, tasks }: ColumnProps) => {
               <TaskCard
                 key={task.id}
                 id={task.id}
-                content={task.content}
+                title={task.title}
                 subtasks={task.subtasks}
                 index={index}
               />

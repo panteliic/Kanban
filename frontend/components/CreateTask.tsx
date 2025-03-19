@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 import React, { useEffect, useState } from "react";
 import {
   Dialog,
@@ -18,105 +18,128 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { usePathname } from "next/navigation";
+interface Column {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
+interface Board {
+  id: string;
+  title: string;
+  columns: Column[];
+}
 function CreateTask() {
   const [mobile, setMobile] = useState(false);
+  const [subtasks, setSubtasks] = useState<string[]>([""]);
 
   useEffect(() => {
     const checkScreenSize = () => {
-      if (window.innerWidth <= 850) {
-        setMobile(true);
-      } else {
-        setMobile(false);
-      }
+      setMobile(window.innerWidth <= 850);
     };
 
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
-
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
+
+  const addSubtask = () => {
+    setSubtasks([...subtasks, ""]);
+  };
+
+  const removeSubtask = (index: number) => {
+    setSubtasks(subtasks.filter((_, i) => i !== index));
+  };
+
+  const handleSubtaskChange = (index: number, value: string) => {
+    const updatedSubtasks = [...subtasks];
+    updatedSubtasks[index] = value;
+    setSubtasks(updatedSubtasks);
+  };
+
+  const boards = useSelector(
+    (state: RootState) => state.board.boards
+  ) as Board[];
+  const pathname = usePathname();
+  const boardId: string | undefined = pathname?.split("/").pop();
+  const currentBoard: Board | undefined = boards.find(
+    (board) => board.id === boardId
+  );
+  const columns: Column[] = currentBoard?.columns || [];
+
   return (
     <Dialog>
-      {mobile ? (
-        <DialogTrigger className="bg-primary text-primary-foreground flex justify-center items-center px-5 capitalize rounded-full text-lg h-12">
-          +
-        </DialogTrigger>
-      ) : (
-        <DialogTrigger className="bg-primary text-primary-foreground flex justify-center items-center px-5 capitalize rounded-full text-lg h-12">
-          + add new task
-        </DialogTrigger>
-      )}
+      <DialogTrigger className="bg-primary text-primary-foreground flex justify-center items-center px-5 capitalize rounded-full text-lg h-12">
+        {mobile ? "+" : "+ add new task"}
+      </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New Task</DialogTitle>
         </DialogHeader>
         <form className="flex flex-col gap-4">
-          <div className="flex flex-col gap-4 ">
-            <label htmlFor="" className="font-semibold">
-              Title
-            </label>
+          <div className="flex flex-col gap-4">
+            <label className="font-semibold">Title</label>
             <Input type="text" />
           </div>
-          <div className="flex flex-col gap-4 ">
-            <label htmlFor="" className="font-semibold">
-              Description
-            </label>
-            <Textarea className=" resize-none"/>
+          <div className="flex flex-col gap-4">
+            <label className="font-semibold">Description</label>
+            <Textarea className="resize-none" />
           </div>
           <div>
-            <h3 className="font-semibold mb-3">Submusk</h3>
+            <h3 className="font-semibold mb-3">Subtasks</h3>
             <ul className="flex flex-col gap-3">
-              <li className="flex gap-3 items-center">
-                <Input type="text" />
-                <Image
-                  src={"/assets/icon-cross.svg"}
-                  alt="settings board"
-                  width={100}
-                  height={100}
-                  className=" w-4 cursor-pointer "
-                />
-              </li>
-              <li className="flex gap-3 items-center">
-                <Input type="text" />
-                <Image
-                  src={"/assets/icon-cross.svg"}
-                  alt="settings board"
-                  width={100}
-                  height={100}
-                  className=" w-4 cursor-pointer"
-                />
-              </li>
+              {subtasks.map((subtask, index) => (
+                <li key={index} className="flex gap-3 items-center">
+                  <Input
+                    type="text"
+                    value={subtask}
+                    onChange={(e) => handleSubtaskChange(index, e.target.value)}
+                  />
+                  <Image
+                    src="/assets/icon-cross.svg"
+                    alt="remove subtask"
+                    width={16}
+                    height={16}
+                    className="w-4 cursor-pointer"
+                    onClick={() => removeSubtask(index)}
+                  />
+                </li>
+              ))}
             </ul>
             <Button
               type="button"
               className="bg-primary text-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md w-full"
+              onClick={addSubtask}
             >
-              +add new submask
+              + add new subtask
             </Button>
           </div>
-          <div className="flex flex-col gap-4 ">
-            <label htmlFor="" className="font-semibold">
-              Status
-            </label>
+          <div className="flex flex-col gap-4">
+            <label className="font-semibold">Status</label>
             <Select>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Todo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="todo">Todo</SelectItem>
-                <SelectItem value="doing">Doing</SelectItem>
-                <SelectItem value="done">Done</SelectItem>
+                {columns.map(({ id, name }) => (
+                  <SelectItem key={id} value={id.toString()}>
+                    {name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
           <Button
-              type="button"
-              className="bg-primary text-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md w-full"
-            >
-              Create Task
-            </Button>
+            type="button"
+            className="bg-primary text-primary-foreground flex justify-center items-center mt-5 px-5 capitalize rounded-full text-md w-full"
+          >
+            Create Task
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
