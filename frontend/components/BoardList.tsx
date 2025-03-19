@@ -31,11 +31,11 @@ function BoardList() {
         if (Array.isArray(response.data)) {
           dispatch(setBoards(response.data));
         } else {
-          dispatch(setBoards([])); 
+          dispatch(setBoards([]));
         }
       } catch (err) {
         console.error("Error fetching boards:", err);
-        dispatch(setBoards([])); 
+        dispatch(setBoards([]));
       } finally {
         dispatch(setLoading(false));
       }
@@ -51,7 +51,11 @@ function BoardList() {
       </h3>
       <ul>
         {boards.map((board) => (
-          <SideBarButton key={board.id} boardName={board.title} active={false} />
+          <SideBarButton
+            key={board.id}
+            boardName={board.title}
+            boardId={board.id}
+          />
         ))}
       </ul>
       <CreateNewBoard />
