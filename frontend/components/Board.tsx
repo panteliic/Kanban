@@ -9,13 +9,13 @@ import { usePathname } from "next/navigation";
 
 interface Subtask {
   id: string;
-  content: string;
+  title: string;
   completed?: boolean;
 }
 
 interface Task {
   id: string;
-  content: string;
+  title: string;
   subtasks: Subtask[];
 }
 
@@ -52,10 +52,10 @@ const KanbanBoard = () => {
         boardData.columns.forEach((column: ColumnData) => {
           columnsData[column.name.toLowerCase()] = column.tasks.map((task: Task) => ({
             id: task.id,
-            content: task.content,
+            title: task.title,
             subtasks: task.subtasks.map((subtask: Subtask) => ({
               id: subtask.id,
-              content: subtask.content,
+              title: subtask.title,
               completed: subtask.completed,
             })),
           }));
@@ -98,7 +98,8 @@ const KanbanBoard = () => {
       [destination.droppableId]: endColumn,
     });
   };
-
+  console.log(tasks);
+  
   return (
     <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
       <div

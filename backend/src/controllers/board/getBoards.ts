@@ -12,11 +12,12 @@ export const getUserBoards = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const boards = await AppDataSource.getRepository(Board).find({
-      where: { user: { id: userId } },
-      relations: ["columns"],
-    });
+        where: { user: { id: userId } },
+        relations: ["columns"], 
+      });
+  
+      res.status(200).json(boards);
 
-    res.status(200).json(boards);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Interal server error" });
