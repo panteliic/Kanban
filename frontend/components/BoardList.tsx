@@ -41,7 +41,7 @@ function BoardList() {
     };
 
     fetchBoards();
-  }, [userId, dispatch]); 
+  }, [userId, dispatch, boards.length]); 
 
   return (
     <div>
