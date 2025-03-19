@@ -3,11 +3,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import themeReducer from "./redux/themeSlice";
 import authReducer from "./redux/authSlice";
 import loadingReducer from "./redux/LoadingSlice";
+import boardReducer from "./redux/boardSlice"
 export const store = configureStore({
   reducer: {
     theme: themeReducer,
     auth: authReducer,
-    loading: loadingReducer
+    loading: loadingReducer,
+    board: boardReducer,
   },
 });
 

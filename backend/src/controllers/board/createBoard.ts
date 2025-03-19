@@ -16,19 +16,25 @@ export const CreateBoard = async (req, res) => {
     const newBoard = AppDataSource.getRepository(Board).create({ title, user });
     await AppDataSource.getRepository(Board).save(newBoard);
 
-    if (Array.isArray(columns) && columns.length > 0) {
-      const newColumns = columns.map((col) => {
-        return AppDataSource.getRepository(BoardColumn).create({
-          name: col.name,
-          board: newBoard,
-        });
-      });
+    const defaultColumns = ["To Do", "Doing", "Done"];
 
-      await AppDataSource.getRepository(BoardColumn).save(newColumns);
-      newBoard.columns = newColumns;
+    const columnsToUse = [...defaultColumns];
+
+    if (Array.isArray(columns) && columns.length > 0) {
+      columnsToUse.push(...columns); 
     }
 
-    res.status(201).json({ message: "Created new board" });
+    const newColumns = columnsToUse.map((col) => {
+      return AppDataSource.getRepository(BoardColumn).create({
+        name: col,
+        board: newBoard,
+      });
+    });
+
+    await AppDataSource.getRepository(BoardColumn).save(newColumns);
+    newBoard.columns = newColumns;
+
+    res.status(201).json({ message: "Created new board", board: newBoard });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
