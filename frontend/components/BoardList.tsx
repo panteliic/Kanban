@@ -1,29 +1,52 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import api from "../utils/api";
 import SideBarButton from "./SideBarButton";
 import CreateNewBoard from "./CreateNewBoard";
-
+import { RootState } from "@/store";
+import { setLoading } from "@/redux/LoadingSlice";
+import { setBoards } from "@/redux/boardSlice";
 
 function BoardList() {
-  const boards = [
-    { boardName: "Platform Launch", active: true },
-    { boardName: "Marketing Plan", active: false },
-    { boardName: "Roadmap", active: false },
-  ];
+  const boards = useSelector((state: RootState) => state.board.boards);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const userId = user?.id;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!userId || boards.length > 0) return;
+
+    const fetchBoards = async () => {
+      dispatch(setLoading(true));
+
+      try {
+        const response = await api.get(`/boards/getBoards/${userId}`);
+        dispatch(setBoards(response.data || []));
+      } catch (err) {
+        console.error("Error fetching boards:", err);
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+
+    fetchBoards();
+  }, [userId, boards.length, dispatch]);
+
   return (
     <div>
       <h3 className="text-muted-foreground font-medium uppercase px-5 mb-5">
-        all boards (3)
+        All Boards ({boards.length})
       </h3>
       <ul>
-        {boards.map((board, index) => (
+        {boards.map((board) => (
           <SideBarButton
-            key={index}
-            boardName={board.boardName}
-            active={board.active}
+            key={board.id}
+            boardName={board.title}
+            active={false}
           />
         ))}
       </ul>
-      <CreateNewBoard/>
+      <CreateNewBoard />
     </div>
   );
 }
