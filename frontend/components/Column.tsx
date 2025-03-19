@@ -11,7 +11,7 @@ type Task = {
   id: string;
   content: string;
   subtasks: Subtask[];
-  index?: number;  
+  index?: number;
 };
 
 type ColumnProps = {
@@ -49,7 +49,9 @@ const Column = ({ columnId, columnName, tasks }: ColumnProps) => {
     <Droppable droppableId={columnId}>
       {(provided) => (
         <div
-          className="w-80 text-foreground rounded-md p-2 bg-secondary"
+          className={`w-96 text-foreground rounded-md p-2 ${
+            tasks.length === 0 ? "border-dashed border-2" : "border-none"
+          } bg-secondary`}
           ref={provided.innerRef}
           {...provided.droppableProps}
         >
@@ -57,15 +59,16 @@ const Column = ({ columnId, columnName, tasks }: ColumnProps) => {
             <div className={`w-3 h-3 rounded-full ${statusColor}`} />
             <h2 className="font-bold text-[#828fa3]">{columnName}</h2>
           </div>
-          {tasks.map((task, index) => (
-            <TaskCard
-              key={task.id}
-              id={task.id}
-              content={task.content}
-              subtasks={task.subtasks}
-              index={index}
-            />
-          ))}
+          {tasks &&
+            tasks.map((task, index) => (
+              <TaskCard
+                key={task.id}
+                id={task.id}
+                content={task.content}
+                subtasks={task.subtasks}
+                index={index}
+              />
+            ))}
           {provided.placeholder}
         </div>
       )}

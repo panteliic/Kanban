@@ -16,13 +16,9 @@ export const CreateBoard = async (req, res) => {
     const newBoard = AppDataSource.getRepository(Board).create({ title, user });
     await AppDataSource.getRepository(Board).save(newBoard);
 
-    const defaultColumns = ["To Do", "Doing", "Done"];
+    const defaultColumns = ["todo", "doing", "done"];
 
-    const columnsToUse = [...defaultColumns];
-
-    if (Array.isArray(columns) && columns.length > 0) {
-      columnsToUse.push(...columns); 
-    }
+    let columnsToUse: string[] = [...defaultColumns, ...columns];
 
     const newColumns = columnsToUse.map((col) => {
       return AppDataSource.getRepository(BoardColumn).create({
@@ -32,6 +28,7 @@ export const CreateBoard = async (req, res) => {
     });
 
     await AppDataSource.getRepository(BoardColumn).save(newColumns);
+
     newBoard.columns = newColumns;
 
     res.status(201).json({ message: "Created new board", board: newBoard });

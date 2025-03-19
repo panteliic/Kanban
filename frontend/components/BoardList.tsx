@@ -19,30 +19,29 @@ function BoardList() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!userId) return;
-    if (boards.length > 0) return;
+    if (!userId || boards.length > 0) return; 
 
     const fetchBoards = async () => {
-      dispatch(setLoading(true));
+    
 
       try {
-        const response = await api.get<Board[]>("/boards/getBoards/" + userId);
+        const response = await api.get<Board[]>(`/boards/getBoards/${userId}`);
 
         if (Array.isArray(response.data)) {
           dispatch(setBoards(response.data));
         } else {
-          dispatch(setBoards([]));
+          dispatch(setBoards([])); 
         }
       } catch (err) {
         console.error("Error fetching boards:", err);
-        dispatch(setBoards([]));
+        dispatch(setBoards([])); 
       } finally {
         dispatch(setLoading(false));
       }
     };
 
     fetchBoards();
-  }, [userId, dispatch, boards.length]);
+  }, [userId, dispatch]); 
 
   return (
     <div>
@@ -50,13 +49,15 @@ function BoardList() {
         All Boards ({boards.length})
       </h3>
       <ul>
-        {boards.map((board) => (
-          <SideBarButton
-            key={board.id}
-            boardName={board.title}
-            boardId={board.id}
-          />
-        ))}
+        {boards.length > 0 && (
+          boards.map((board) => (
+            <SideBarButton
+              key={board.id}
+              boardName={board.title}
+              boardId={board.id}
+            />
+          ))
+        )}
       </ul>
       <CreateNewBoard />
     </div>

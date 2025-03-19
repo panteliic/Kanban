@@ -6,7 +6,7 @@ interface Board {
 }
 
 interface BoardState {
-  boards: Board[];
+  boards: Board[] ;
 }
 
 const initialState: BoardState = {
