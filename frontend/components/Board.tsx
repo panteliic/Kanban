@@ -3,21 +3,30 @@
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useState, useEffect, useRef } from "react";
 import Column from "./Column";
-import api from "../utils/api"; // Assume you have an API utility to handle HTTP requests
+import api from "../utils/api"; 
 import { setLoading } from "@/redux/LoadingSlice";
 import { usePathname } from "next/navigation";
 
-type Subtask = {
+interface Subtask {
   id: string;
   content: string;
   completed?: boolean;
-};
+}
 
-type Task = {
+interface Task {
   id: string;
   content: string;
   subtasks: Subtask[];
-};
+}
+
+interface ColumnData {
+  name: string;
+  tasks: Task[];
+}
+
+interface BoardData {
+  columns: ColumnData[];
+}
 
 type ColumnsData = {
   [key: string]: Task[];
@@ -34,24 +43,22 @@ const KanbanBoard = () => {
       const currentBoardId = pathname?.split("/").pop();
       try {
         setLoading(true);
-        const response = await api.get(
+        const response = await api.get<BoardData>(
           `/boards/getBoardData/${currentBoardId}`
         );
         const boardData = response.data;
         const columnsData: ColumnsData = {};
 
-        boardData.columns.forEach((column: any) => {
-          columnsData[column.name.toLowerCase()] = column.tasks.map(
-            (task: any) => ({
-              id: task.id,
-              content: task.title,
-              subtasks: task.subtasks.map((subtask: any) => ({
-                id: subtask.id,
-                content: subtask.title,
-                completed: subtask.completed,
-              })),
-            })
-          );
+        boardData.columns.forEach((column: ColumnData) => {
+          columnsData[column.name.toLowerCase()] = column.tasks.map((task: Task) => ({
+            id: task.id,
+            content: task.content,
+            subtasks: task.subtasks.map((subtask: Subtask) => ({
+              id: subtask.id,
+              content: subtask.content,
+              completed: subtask.completed,
+            })),
+          }));
         });
 
         setTasks(columnsData);
@@ -63,7 +70,7 @@ const KanbanBoard = () => {
     };
 
     fetchBoardData();
-  }, []);
+  }, [pathname]);
 
   const onDragStart = () => {
     setIsDragging(true);
