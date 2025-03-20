@@ -1,11 +1,13 @@
 "use client";
-
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useState, useEffect, useRef } from "react";
 import Column from "./Column";
-import api from "../utils/api"; 
+import api from "../utils/api";
 import { setLoading } from "@/redux/LoadingSlice";
 import { usePathname } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { setTasksData } from "@/redux/taskSlice";
 
 interface Subtask {
   id: string;
@@ -33,10 +35,13 @@ type ColumnsData = {
 };
 
 const KanbanBoard = () => {
-  const [tasks, setTasks] = useState<ColumnsData>({});
+  const dispatch = useDispatch();
+  const tasks = useSelector((state: RootState) => state.task.tasks);
   const [isDragging, setIsDragging] = useState(false);
+  const [isBoardBeingDragged, setIsBoardBeingDragged] = useState(false);
   const boardRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
+  const scrollStart = useRef(0); // Keeps track of scroll position at start
 
   useEffect(() => {
     const fetchBoardData = async () => {
@@ -50,18 +55,20 @@ const KanbanBoard = () => {
         const columnsData: ColumnsData = {};
 
         boardData.columns.forEach((column: ColumnData) => {
-          columnsData[column.name.toLowerCase()] = column.tasks.map((task: Task) => ({
-            id: task.id,
-            title: task.title,
-            subtasks: task.subtasks.map((subtask: Subtask) => ({
-              id: subtask.id,
-              title: subtask.title,
-              completed: subtask.completed,
-            })),
-          }));
+          columnsData[column.name.toLowerCase()] = column.tasks.map(
+            (task: Task) => ({
+              id: task.id,
+              title: task.title,
+              subtasks: task.subtasks.map((subtask: Subtask) => ({
+                id: subtask.id,
+                title: subtask.title,
+                completed: subtask.completed,
+              })),
+            })
+          );
         });
 
-        setTasks(columnsData);
+        dispatch(setTasksData(columnsData));
       } catch (error) {
         console.error("Error fetching board data:", error);
       } finally {
@@ -92,24 +99,52 @@ const KanbanBoard = () => {
     const [movedTask] = startColumn.splice(source.index, 1);
     endColumn.splice(destination.index, 0, movedTask);
 
-    setTasks({
-      ...tasks,
-      [source.droppableId]: startColumn,
-      [destination.droppableId]: endColumn,
-    });
+    dispatch(
+      setTasksData({
+        ...tasks,
+        [source.droppableId]: startColumn,
+        [destination.droppableId]: endColumn,
+      })
+    );
   };
-  console.log(tasks);
-  
+
+  // Handle mouse drag logic for horizontal scrolling
+  const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setIsBoardBeingDragged(true);
+    scrollStart.current = e.clientX; // Store starting mouse position
+    document.body.style.cursor = "grabbing";
+  };
+
+  const onMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (isBoardBeingDragged && boardRef.current) {
+      const movementX = e.clientX - scrollStart.current; // Calculate horizontal movement
+      boardRef.current.scrollLeft -= movementX; // Move the board columns horizontally
+      scrollStart.current = e.clientX; // Update starting position for next move
+    }
+  };
+
+  const onMouseUp = () => {
+    setIsBoardBeingDragged(false);
+    document.body.style.cursor = "default";
+  };
+
+  const onMouseLeave = () => {
+    setIsBoardBeingDragged(false);
+    document.body.style.cursor = "default";
+  };
+
   return (
     <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
       <div
-        className={`bg-secondary overflow-x-auto cursor-move select-none ${
-          isDragging ? "overflow-hidden" : ""
-        }`}
         ref={boardRef}
+        className="bg-secondary overflow-x-auto cursor-grab select-none"
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseLeave}
       >
-        <div className="h-[calc(100vh-6rem)] overflow-auto">
-          <div className="flex gap-4 flex-nowrap w-max overflow-auto p-6 h-screen">
+        <div className="h-[calc(100vh-6rem)]">
+          <div className="flex gap-4 flex-nowrap w-max p-6 h-screen">
             {Object.keys(tasks).map((columnId) => (
               <Column
                 key={columnId}
@@ -120,7 +155,7 @@ const KanbanBoard = () => {
             ))}
             {Object.keys(tasks).length < 5 && (
               <div className="w-80 h-screen p-4">
-                <div className="w-full h-screen text-muted-foreground text-3xl font-semibold rounded-md p-4 bg-gradient-to-b from-background to-secondary flex items-center justify-center cursor-pointer ">
+                <div className="w-full h-screen text-muted-foreground text-3xl font-semibold rounded-md p-4 bg-gradient-to-b from-background to-secondary flex items-center justify-center cursor-pointer">
                   + New Column
                 </div>
               </div>

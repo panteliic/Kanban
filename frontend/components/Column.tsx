@@ -24,10 +24,6 @@ const getStatusColor = (columnName: string) => {
   const randomColors = [
     "bg-red-500",
     "bg-purple-500",
-    "bg-pink-500",
-    "bg-teal-500",
-    "bg-indigo-500",
-    "bg-orange-500",
   ];
 
   switch (columnName.toLowerCase()) {
@@ -46,7 +42,7 @@ const Column = ({ columnId, columnName, tasks }: ColumnProps) => {
   const statusColor = getStatusColor(columnName);
 
   return (
-    <Droppable droppableId={columnId}>
+    <Droppable droppableId={String(columnId)}>
       {(provided) => (
         <div
           className={`w-96 text-foreground rounded-md p-2 ${
