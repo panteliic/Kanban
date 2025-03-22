@@ -92,7 +92,7 @@ const KanbanBoard = () => {
   const onDragStart = () => {
     setIsDragging(true);
   };
-  const onDragEnd = (result: DropResult) => {
+  const onDragEnd = async (result: DropResult) => {
     setIsDragging(false);
     const { source, destination } = result;
 
@@ -104,14 +104,25 @@ const KanbanBoard = () => {
       return;
 
     const updatedTasks = { ...tasks };
-    const startColumnData = updatedTasks[source.droppableId];
+
+    const startColumnData = { ...updatedTasks[source.droppableId] };
     const endColumnData =
       source.droppableId === destination.droppableId
         ? startColumnData
-        : updatedTasks[destination.droppableId];
+        : { ...updatedTasks[destination.droppableId] };
 
-    const [movedTask] = startColumnData.tasks.splice(source.index, 1);
-    endColumnData.tasks.splice(destination.index, 0, movedTask);
+    const startTasks = [...startColumnData.tasks];
+    const endTasks =
+      source.droppableId === destination.droppableId
+        ? startTasks
+        : [...endColumnData.tasks];
+
+    const [movedTask] = startTasks.splice(source.index, 1);
+    endTasks.splice(destination.index, 0, movedTask);
+
+    startColumnData.tasks = startTasks;
+    endColumnData.tasks = endTasks;
+
     dispatch(
       setTasksData({
         ...tasks,
@@ -119,6 +130,14 @@ const KanbanBoard = () => {
         [destination.droppableId]: endColumnData,
       })
     );
+
+    try {
+      await api.put(`/task/updateTask/${movedTask.id}`, {
+        newColumnId: destination.droppableId,
+      });
+    } catch (error) {
+      console.error("Error updating task column:", error);
+    }
   };
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
