@@ -35,9 +35,9 @@ function Navbar() {
   }, []);
 
   const currentBoardId = pathname?.split("/").pop();
-
+  let currentBoard;
   if (currentBoardId !== "")
-    var currentBoard = boards.find((board) => board.id === currentBoardId);
+    currentBoard = boards.find((board) => board.id === currentBoardId);
 
   const deleteBoard = async () => {
     try {
