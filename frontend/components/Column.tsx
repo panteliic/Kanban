@@ -21,10 +21,7 @@ type ColumnProps = {
 };
 
 const getStatusColor = (columnName: string) => {
-  const randomColors = [
-    "bg-red-500",
-    "bg-purple-500",
-  ];
+  const randomColors = ["bg-red-500", "bg-purple-500"];
 
   switch (columnName.toLowerCase()) {
     case "todo":

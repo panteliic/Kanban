@@ -41,7 +41,7 @@ const KanbanBoard = () => {
   const [isBoardBeingDragged, setIsBoardBeingDragged] = useState(false);
   const boardRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
-  const scrollStart = useRef(0); // Keeps track of scroll position at start
+  const scrollStart = useRef(0); 
 
   useEffect(() => {
     const fetchBoardData = async () => {
@@ -82,23 +82,20 @@ const KanbanBoard = () => {
   const onDragStart = () => {
     setIsDragging(true);
   };
-
   const onDragEnd = (result: DropResult) => {
     setIsDragging(false);
     const { source, destination } = result;
-
+  
     if (!destination) return;
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    )
-      return;
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
 
-    const startColumn = [...tasks[source.droppableId]];
-    const endColumn = [...tasks[destination.droppableId]];
+    const updatedTasks = { ...tasks };
+    const startColumn = [...updatedTasks[source.droppableId]];
+    const endColumn = source.droppableId === destination.droppableId ? startColumn : [...updatedTasks[destination.droppableId]];
+  
     const [movedTask] = startColumn.splice(source.index, 1);
     endColumn.splice(destination.index, 0, movedTask);
-
+  
     dispatch(
       setTasksData({
         ...tasks,
@@ -107,19 +104,20 @@ const KanbanBoard = () => {
       })
     );
   };
+  
 
-  // Handle mouse drag logic for horizontal scrolling
+
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setIsBoardBeingDragged(true);
-    scrollStart.current = e.clientX; // Store starting mouse position
+    scrollStart.current = e.clientX; 
     document.body.style.cursor = "grabbing";
   };
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (isBoardBeingDragged && boardRef.current) {
-      const movementX = e.clientX - scrollStart.current; // Calculate horizontal movement
-      boardRef.current.scrollLeft -= movementX; // Move the board columns horizontally
-      scrollStart.current = e.clientX; // Update starting position for next move
+      const movementX = e.clientX - scrollStart.current; 
+      boardRef.current.scrollLeft -= movementX; 
+      scrollStart.current = e.clientX; 
     }
   };
 
