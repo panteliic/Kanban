@@ -35,13 +35,14 @@ function Navbar() {
   }, []);
 
   const currentBoardId = pathname?.split("/").pop();
-
-  const currentBoard = boards.find((board) => board.id === currentBoardId);
+  let currentBoard;
+  if (currentBoardId !== "")
+    currentBoard = boards.find((board) => board.id === currentBoardId);
 
   const deleteBoard = async () => {
     try {
       await api.delete(`/boards/delete/${currentBoardId}`);
-      dispatch(deleteBoardAction(currentBoardId || ""))
+      dispatch(deleteBoardAction(currentBoardId || ""));
       return router.push("/");
     } catch (err) {
       console.error(err);
