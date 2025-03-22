@@ -1,38 +1,20 @@
 import { Droppable } from "@hello-pangea/dnd";
 import TaskCard from "./TaskCard";
+import {  ColumnProps } from "@/types"; 
 
-type Subtask = {
-  id: string;
-  title: string;
-  completed?: boolean;
+const getStatusColor = (columnName: string): string => {
+  const statusColors: Record<string, string> = {
+    todo: "bg-blue-500",
+    doing: "bg-yellow-500",
+    done: "bg-green-500",
+  };
+
+  return statusColors[columnName.toLowerCase()] || getRandomColor();
 };
 
-type Task = {
-  id: string;
-  title: string;
-  subtasks: Subtask[];
-  index?: number;
-};
-
-type ColumnProps = {
-  columnId: string;
-  columnName: string;
-  tasks: Task[];
-};
-
-const getStatusColor = (columnName: string) => {
+const getRandomColor = (): string => {
   const randomColors = ["bg-red-500", "bg-purple-500"];
-
-  switch (columnName.toLowerCase()) {
-    case "todo":
-      return "bg-blue-500";
-    case "doing":
-      return "bg-yellow-500";
-    case "done":
-      return "bg-green-500";
-    default:
-      return randomColors[Math.floor(Math.random() * randomColors.length)];
-  }
+  return randomColors[Math.floor(Math.random() * randomColors.length)];
 };
 
 const Column = ({ columnId, columnName, tasks }: ColumnProps) => {

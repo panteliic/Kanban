@@ -2,45 +2,13 @@
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useState, useEffect, useRef } from "react";
 import Column from "./Column";
-import api from "../utils/api";
 import { setLoading } from "@/redux/LoadingSlice";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setTasksData } from "@/redux/taskSlice";
-
-interface Subtask {
-  id: string;
-  title: string;
-  completed?: boolean;
-}
-
-interface Task {
-  id: string;
-  title: string;
-  subtasks: Subtask[];
-}
-
-interface ColumnData {
-  id: string;
-  name: string;
-  tasks: Task[];
-}
-
-interface BoardData {
-  columns: ColumnData[];
-}
-interface Column {
-  id: string;
-  name: string;
-}
-type ColumnsData = {
-  [columnId: string]: {
-    column: Column;
-    tasks: Task[];
-  };
-};
-
+import { fetchBoardData } from "@/utils/fetchBoardData";
+import { updateTaskColumn } from "@/utils/updateTaskColumn";
 const KanbanBoard = () => {
   const dispatch = useDispatch();
   const tasks = useSelector((state: RootState) => state.task.tasks);
@@ -51,34 +19,11 @@ const KanbanBoard = () => {
   const scrollStart = useRef(0);
 
   useEffect(() => {
-    const fetchBoardData = async () => {
-      const currentBoardId = pathname?.split("/").pop();
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await api.get<BoardData>(
-          `/boards/getBoardData/${currentBoardId}`
-        );
-        const boardData = response.data;
-        const columnsData: ColumnsData = {};
-
-        boardData.columns.forEach((column: ColumnData) => {
-          columnsData[column.id] = {
-            column: {
-              id: column.id,
-              name: column.name,
-            },
-            tasks: column.tasks.map((task: Task) => ({
-              id: task.id,
-              title: task.title,
-              subtasks: task.subtasks.map((subtask: Subtask) => ({
-                id: subtask.id,
-                title: subtask.title,
-                completed: subtask.completed,
-              })),
-            })),
-          };
-        });
-        dispatch(setTasksData(columnsData));
+        const boardData = await fetchBoardData(pathname);
+        dispatch(setTasksData(boardData));
       } catch (error) {
         console.error("Error fetching board data:", error);
       } finally {
@@ -86,7 +31,7 @@ const KanbanBoard = () => {
       }
     };
 
-    fetchBoardData();
+    fetchData();
   }, [pathname]);
 
   const onDragStart = () => {
@@ -132,9 +77,7 @@ const KanbanBoard = () => {
     );
 
     try {
-      await api.put(`/task/updateTask/${movedTask.id}`, {
-        newColumnId: destination.droppableId,
-      });
+      await updateTaskColumn(movedTask.id, destination.droppableId);
     } catch (error) {
       console.error("Error updating task column:", error);
     }
