@@ -17,6 +17,9 @@ export const getBoardData = async (req, res) => {
       order: {
         columns: {
           id: "ASC",
+          tasks: {
+            createdAt: "DESC",
+          },
         },
       },
     });
