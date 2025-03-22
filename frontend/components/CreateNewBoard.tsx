@@ -14,11 +14,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { setLoading } from "@/redux/LoadingSlice";
 import { setBoards } from "@/redux/boardSlice";
-import api from "@/utils/api";
+import { createBoard } from "@/utils/createBoard";
+
 
 function CreateNewBoard() {
   const [title, setTitle] = useState("");
-  const [columns, setColumns] = useState<string[]>([""]); 
+  const [columns, setColumns] = useState<string[]>([""]);
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
   const userId = user?.id;
@@ -33,18 +34,14 @@ function CreateNewBoard() {
 
   const addColumn = () => {
     if (columns.length < 2) {
-      setColumns([...columns, ""]); 
+      setColumns([...columns, ""]);
     }
   };
 
-  const createBoard = async () => {
+  const handleCreateBoard = async () => {
     dispatch(setLoading(true));
     try {
-      const { data } = await api.post(`/boards/create`, {
-        title,
-        columns: columns.filter(col => col.trim() !== ""), 
-        userId,
-      });
+      const data = await createBoard(title, columns, userId); 
 
       dispatch(setBoards(data)); 
     } catch (err) {
@@ -110,7 +107,7 @@ function CreateNewBoard() {
             )}
             <Button
               type="button"
-              onClick={createBoard}
+              onClick={handleCreateBoard} 
               className="bg-primary text-primary-foreground mt-4 w-full"
             >
               Create New Board

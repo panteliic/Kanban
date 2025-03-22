@@ -1,13 +1,5 @@
+import { Board, BoardState } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface Board {
-  id: string;
-  title: string;
-}
-
-interface BoardState {
-  boards: Board[];
-}
 
 const initialState: BoardState = {
   boards: [],

@@ -1,19 +1,7 @@
+import { TaskCardType } from "@/types";
 import { Draggable } from "@hello-pangea/dnd";
 
-type Subtask = {
-  id: string;
-  title: string;
-  completed?: boolean;
-};
-
-type Task = {
-  id: string;
-  title: string;
-  subtasks: Subtask[];
-  index: number;
-};
-
-const TaskCard = ({ id, title, subtasks, index }: Task) => {
+const TaskCard = ({ id, title, subtasks, index }: TaskCardType) => {
   const completedSubtasks = subtasks.filter(
     (subtask) => subtask.completed
   ).length;

@@ -12,8 +12,8 @@ import { RootState } from "@/store";
 import MobileTaskBoard from "./MobileTaskBoard";
 import UserProfile from "./UserProfile";
 import { usePathname, useRouter } from "next/navigation";
-import api from "@/utils/api";
 import { deleteBoard as deleteBoardAction } from "@/redux/boardSlice";
+import { deleteBoardApi } from "@/utils/deleteBoard";
 
 function Navbar() {
   const lightMode = useSelector((state: RootState) => state.theme.lightMode);
@@ -40,15 +40,15 @@ function Navbar() {
     currentBoard = boards.find((board) => board.id === currentBoardId);
 
   const deleteBoard = async () => {
+    if (!currentBoardId) return;
     try {
-      await api.delete(`/boards/delete/${currentBoardId}`);
-      dispatch(deleteBoardAction(currentBoardId || ""));
-      return router.push("/");
+      await deleteBoardApi(currentBoardId);
+      dispatch(deleteBoardAction(currentBoardId));
+      router.push("/");
     } catch (err) {
-      console.error(err);
+      console.error("Error deleting board:", err);
     }
   };
-
   return (
     <div className="w-full h-24 border-b-2 border-border bg-background flex items-center justify-between">
       <div className="w-auto md:w-[20rem] h-full border-0 md:border-r-2 border-border flex items-center px-5">

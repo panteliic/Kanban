@@ -1,17 +1,14 @@
+// BoardList.tsx
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import api from "../utils/api";
-import SideBarButton from "./SideBarButton";
-import CreateNewBoard from "./CreateNewBoard";
 import { RootState } from "@/store";
 import { setLoading } from "@/redux/LoadingSlice";
 import { setBoards } from "@/redux/boardSlice";
 import { usePathname } from "next/navigation";
-
-interface Board {
-  id: string;
-  title: string;
-}
+import { fetchBoards } from "@/utils/boardsList"; 
+import SideBarButton from "./SideBarButton";
+import CreateNewBoard from "./CreateNewBoard";
+import { Board } from "@/types";
 
 function BoardList() {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -21,14 +18,15 @@ function BoardList() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!userId || boards.length > 0) return; 
+    if (!userId || boards.length > 0) return;
 
-    const fetchBoards = async () => {
+    const fetchData = async () => {
       try {
-        const response = await api.get<Board[]>(`/boards/getBoards/${userId}`);
+        dispatch(setLoading(true));
+        const boardsData = await fetchBoards(userId); 
 
-        if (Array.isArray(response.data)) {
-          dispatch(setBoards(response.data));
+        if (Array.isArray(boardsData)) {
+          dispatch(setBoards(boardsData));
         } else {
           dispatch(setBoards([])); 
         }
@@ -40,8 +38,8 @@ function BoardList() {
       }
     };
 
-    fetchBoards();
-  }, [userId, dispatch, boards.length,pathname]); 
+    fetchData();
+  }, [userId, dispatch, boards.length, pathname]); 
 
   return (
     <div>
@@ -50,7 +48,7 @@ function BoardList() {
       </h3>
       <ul>
         {boards.length > 0 && (
-          boards.map((board) => (
+          boards.map((board: Board) => (  
             <SideBarButton
               key={board.id}
               boardName={board.title}
