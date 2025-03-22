@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import ThemeSwitcher from "./ThemeSwitcher";
 import BoardList from "./BoardList";
@@ -7,6 +7,18 @@ import { Button } from "./ui/button";
 
 function Sidebar() {
   const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    const storedHidden = localStorage.getItem("sidebarHidden");
+    if (storedHidden !== null) {
+      setHidden(JSON.parse(storedHidden));
+    }
+  }, []);
+
+  const toggleSidebar = (value: boolean) => {
+    setHidden(value);
+    localStorage.setItem("sidebarHidden", JSON.stringify(value));
+  };
 
   return (
     <div
@@ -17,29 +29,23 @@ function Sidebar() {
       <BoardList />
       <div className="flex flex-col gap-3">
         <ThemeSwitcher />
-        <div className="flex gap-1 text-muted-foreground m-auto justify-center cursor-pointer">
+        <div
+          className="flex gap-1 text-muted-foreground m-auto justify-center cursor-pointer"
+          onClick={() => toggleSidebar(true)} 
+        >
           <Image
             src="/assets/icon-hide-sidebar.svg"
-            alt="show sidebar"
+            alt="hide sidebar"
             width={24}
             height={24}
             className="cursor-pointer"
           />
-          <h3
-            className="capitalize"
-            onClick={() => {
-              setHidden(true); 
-            }}
-          >
-            hide sidebar
-          </h3>
+          <h3 className="capitalize">hide sidebar</h3>
         </div>
       </div>
       <Button
-        className={`absolute rounded-r-full bottom-3 ${
-          !hidden ? "hidden" : ""
-        }`}
-        onClick={() => setHidden(false)} 
+        className={`absolute rounded-r-full bottom-3 ${!hidden ? "hidden" : ""}`}
+        onClick={() => toggleSidebar(false)} 
       >
         <Image
           src="/assets/icon-show-sidebar.svg"
