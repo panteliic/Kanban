@@ -22,6 +22,7 @@ interface Task {
 }
 
 interface ColumnData {
+  id: string;
   name: string;
   tasks: Task[];
 }
@@ -29,19 +30,25 @@ interface ColumnData {
 interface BoardData {
   columns: ColumnData[];
 }
-
+interface Column {
+  id: string;
+  name: string;
+}
 type ColumnsData = {
-  [key: string]: Task[];
+  [columnId: string]: {
+    column: Column;
+    tasks: Task[];
+  };
 };
 
 const KanbanBoard = () => {
   const dispatch = useDispatch();
   const tasks = useSelector((state: RootState) => state.task.tasks);
-  const [isDragging, setIsDragging] = useState(false);
+  const [, setIsDragging] = useState(false);
   const [isBoardBeingDragged, setIsBoardBeingDragged] = useState(false);
   const boardRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
-  const scrollStart = useRef(0); 
+  const scrollStart = useRef(0);
 
   useEffect(() => {
     const fetchBoardData = async () => {
@@ -54,9 +61,16 @@ const KanbanBoard = () => {
         const boardData = response.data;
         const columnsData: ColumnsData = {};
 
+        console.log(boardData);
+        console.log(columnsData);
+
         boardData.columns.forEach((column: ColumnData) => {
-          columnsData[column.name.toLowerCase()] = column.tasks.map(
-            (task: Task) => ({
+          columnsData[column.id] = {
+            column: {
+              id: column.id,
+              name: column.name,
+            },
+            tasks: column.tasks.map((task: Task) => ({
               id: task.id,
               title: task.title,
               subtasks: task.subtasks.map((subtask: Subtask) => ({
@@ -64,10 +78,10 @@ const KanbanBoard = () => {
                 title: subtask.title,
                 completed: subtask.completed,
               })),
-            })
-          );
+            })),
+          };
         });
-
+        console.log(columnsData);
         dispatch(setTasksData(columnsData));
       } catch (error) {
         console.error("Error fetching board data:", error);
@@ -85,39 +99,43 @@ const KanbanBoard = () => {
   const onDragEnd = (result: DropResult) => {
     setIsDragging(false);
     const { source, destination } = result;
-  
+
     if (!destination) return;
-    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    )
+      return;
 
     const updatedTasks = { ...tasks };
-    const startColumn = [...updatedTasks[source.droppableId]];
-    const endColumn = source.droppableId === destination.droppableId ? startColumn : [...updatedTasks[destination.droppableId]];
-  
-    const [movedTask] = startColumn.splice(source.index, 1);
-    endColumn.splice(destination.index, 0, movedTask);
-  
+    const startColumnData = updatedTasks[source.droppableId];
+    const endColumnData =
+      source.droppableId === destination.droppableId
+        ? startColumnData
+        : updatedTasks[destination.droppableId];
+
+    const [movedTask] = startColumnData.tasks.splice(source.index, 1);
+    endColumnData.tasks.splice(destination.index, 0, movedTask);
     dispatch(
       setTasksData({
         ...tasks,
-        [source.droppableId]: startColumn,
-        [destination.droppableId]: endColumn,
+        [source.droppableId]: startColumnData,
+        [destination.droppableId]: endColumnData,
       })
     );
   };
-  
-
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setIsBoardBeingDragged(true);
-    scrollStart.current = e.clientX; 
+    scrollStart.current = e.clientX;
     document.body.style.cursor = "grabbing";
   };
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (isBoardBeingDragged && boardRef.current) {
-      const movementX = e.clientX - scrollStart.current; 
-      boardRef.current.scrollLeft -= movementX; 
-      scrollStart.current = e.clientX; 
+      const movementX = e.clientX - scrollStart.current;
+      boardRef.current.scrollLeft -= movementX;
+      scrollStart.current = e.clientX;
     }
   };
 
@@ -147,8 +165,8 @@ const KanbanBoard = () => {
               <Column
                 key={columnId}
                 columnId={columnId}
-                columnName={columnId.toUpperCase()}
-                tasks={tasks[columnId]}
+                columnName={tasks[columnId].column.name.toUpperCase()}
+                tasks={tasks[columnId].tasks}
               />
             ))}
             {Object.keys(tasks).length < 5 && (

@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import {
   Dialog,
@@ -18,10 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { usePathname } from "next/navigation";
 import api from "@/utils/api";
+import { setTasksData } from "@/redux/taskSlice"; 
 
 interface Column {
   id: number;
@@ -37,6 +37,8 @@ interface Board {
 }
 
 function CreateTask() {
+  const dispatch = useDispatch();
+  const tasks = useSelector((state: RootState) => state.task.tasks);
   const [mobile, setMobile] = useState(false);
   const [subtasks, setSubtasks] = useState<string[]>([""]);
   const [title, setTitle] = useState("");
@@ -80,15 +82,34 @@ function CreateTask() {
   const handleCreateTask = async () => {
     if (!currentBoard || !status) return;
 
-    const taskData = {
-      columnId: Number(status),
-      title,
-      description,
-      subtasks,
-    };
-
     try {
-      await api.post("/boards/createNewTask", taskData);
+      const response = await api.post("/boards/createNewTask", {
+        columnId: Number(status),
+        title,
+        description,
+        subtasks,
+      });
+
+      const newTask = response.data.task;
+      const updatedTasks = { ...tasks };
+      const columnKey = status.toLowerCase();
+
+      
+      if (!updatedTasks[columnKey]) {
+        updatedTasks[columnKey] = {
+          column: { id: status, name: "" },
+          tasks: [],
+        }; 
+      }
+
+      
+      updatedTasks[columnKey] = {
+        ...updatedTasks[columnKey],
+        tasks: [newTask, ...updatedTasks[columnKey].tasks], 
+      };
+      dispatch(setTasksData(updatedTasks));
+
+
       setTitle("");
       setDescription("");
       setSubtasks([""]);

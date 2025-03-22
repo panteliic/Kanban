@@ -21,13 +21,9 @@ function BoardList() {
   const pathname = usePathname();
 
   useEffect(() => {
-    console.log(pathname);
-    
     if (!userId || boards.length > 0) return; 
 
     const fetchBoards = async () => {
-    
-
       try {
         const response = await api.get<Board[]>(`/boards/getBoards/${userId}`);
 

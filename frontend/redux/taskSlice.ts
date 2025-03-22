@@ -1,5 +1,4 @@
-// redux/tasksSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Subtask {
   id: string;
@@ -13,8 +12,16 @@ interface Task {
   subtasks: Subtask[];
 }
 
+interface Column {
+  id: string; // Added id field to identify the column
+  name: string;
+}
+
 interface ColumnsData {
-  [key: string]: Task[];
+  [columnId: string]: {
+    column: Column;
+    tasks: Task[];
+  };
 }
 
 interface TasksState {
@@ -26,7 +33,7 @@ const initialState: TasksState = {
 };
 
 const tasksSlice = createSlice({
-  name: 'tasks',
+  name: "tasks",
   initialState,
   reducers: {
     setTasksData(state, action: PayloadAction<ColumnsData>) {
