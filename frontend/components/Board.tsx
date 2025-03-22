@@ -9,39 +9,6 @@ import { RootState } from "@/store";
 import { setTasksData } from "@/redux/taskSlice";
 import { fetchBoardData } from "@/utils/fetchBoardData";
 import { updateTaskColumn } from "@/utils/updateTaskColumn";
-
-interface Subtask {
-  id: string;
-  title: string;
-  completed?: boolean;
-}
-
-interface Task {
-  id: string;
-  title: string;
-  subtasks: Subtask[];
-}
-
-interface ColumnData {
-  id: string;
-  name: string;
-  tasks: Task[];
-}
-
-interface BoardData {
-  columns: ColumnData[];
-}
-interface Column {
-  id: string;
-  name: string;
-}
-type ColumnsData = {
-  [columnId: string]: {
-    column: Column;
-    tasks: Task[];
-  };
-};
-
 const KanbanBoard = () => {
   const dispatch = useDispatch();
   const tasks = useSelector((state: RootState) => state.task.tasks);
