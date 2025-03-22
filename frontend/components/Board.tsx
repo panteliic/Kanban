@@ -61,9 +61,6 @@ const KanbanBoard = () => {
         const boardData = response.data;
         const columnsData: ColumnsData = {};
 
-        console.log(boardData);
-        console.log(columnsData);
-
         boardData.columns.forEach((column: ColumnData) => {
           columnsData[column.id] = {
             column: {
@@ -81,7 +78,6 @@ const KanbanBoard = () => {
             })),
           };
         });
-        console.log(columnsData);
         dispatch(setTasksData(columnsData));
       } catch (error) {
         console.error("Error fetching board data:", error);
