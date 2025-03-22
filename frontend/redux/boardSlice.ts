@@ -6,7 +6,7 @@ interface Board {
 }
 
 interface BoardState {
-  boards: Board[] ;
+  boards: Board[];
 }
 
 const initialState: BoardState = {
@@ -23,11 +23,14 @@ const boardSlice = createSlice({
     addBoard: (state, action: PayloadAction<Board>) => {
       state.boards.push(action.payload);
     },
+    deleteBoard: (state, action: PayloadAction<string>) => {
+      state.boards = state.boards.filter((board) => board.id !== action.payload);
+    },
     clearBoards: (state) => {
       state.boards = [];
     },
   },
 });
 
-export const { setBoards, addBoard, clearBoards } = boardSlice.actions;
+export const { setBoards, addBoard, deleteBoard, clearBoards } = boardSlice.actions;
 export default boardSlice.reducer;

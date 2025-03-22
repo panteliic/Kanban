@@ -7,18 +7,22 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import CreateTask from "./CreateTask";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import MobileTaskBoard from "./MobileTaskBoard";
 import UserProfile from "./UserProfile";
 import { usePathname, useRouter } from "next/navigation";
 import api from "@/utils/api";
+import { deleteBoard as deleteBoardAction } from "@/redux/boardSlice";
 
 function Navbar() {
   const lightMode = useSelector((state: RootState) => state.theme.lightMode);
+  const boards = useSelector((state: RootState) => state.board.boards);
+  const dispatch = useDispatch();
   const [mobile, setMobile] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+
   useEffect(() => {
     const checkScreenSize = () => {
       setMobile(window.innerWidth <= 768);
@@ -30,10 +34,14 @@ function Navbar() {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  const currentBoardId = pathname?.split("/").pop();
+
+  const currentBoard = boards.find((board) => board.id === currentBoardId);
+
   const deleteBoard = async () => {
-    const currentBoardId = pathname?.split("/").pop();
     try {
       await api.delete(`/boards/delete/${currentBoardId}`);
+      dispatch(deleteBoardAction(currentBoardId || ""))
       return router.push("/");
     } catch (err) {
       console.error(err);
@@ -80,7 +88,7 @@ function Navbar() {
       >
         {pathname !== "/" && (
           <h1 className="text-2xl font-semibold text-foreground hidden md:flex">
-            Platform Launch
+            {currentBoard ? currentBoard.title : "Board Not Found"}
           </h1>
         )}
         <div className="flex gap-5 items-center ">
