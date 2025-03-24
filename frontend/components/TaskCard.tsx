@@ -22,7 +22,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { usePathname } from "next/navigation";
 import { updateTaskColumn } from "@/utils/updateTaskColumn";
-import { setTasksData } from "@/redux/taskSlice";
+import { deleteTaskAction, setTasksData } from "@/redux/taskSlice";
+import { Button } from "./ui/button";
+import { deleteTaskApi } from "@/utils/deleteTask";
 
 const TaskCard = ({
   id,
@@ -49,7 +51,7 @@ const TaskCard = ({
     (board) => board.id === boardId
   );
   const columns: Column[] = currentBoard?.columns || [];
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const handleSubtaskChange = async (subtaskId: string) => {
     try {
       const updatedSubtask = await updateSubtaskAPI(subtaskId);
@@ -69,21 +71,24 @@ const TaskCard = ({
     setStatus(newStatus);
     console.log(tasks);
 
-    const sourceColumnId = status; 
+    const sourceColumnId = status;
     const destinationColumnId = newStatus;
-  
-    const task = tasks[sourceColumnId]?.tasks?.find(task => task.id === id);
+
+    const task = tasks[sourceColumnId]?.tasks?.find((task) => task.id === id);
     if (task) {
       const sourceColumnData = { ...tasks[sourceColumnId] };
       const destinationColumnData = { ...tasks[destinationColumnId] };
-  
+
       const sourceTasks = [...sourceColumnData.tasks];
       const destinationTasks = [...destinationColumnData.tasks];
-      const [movedTask] = sourceTasks.splice(sourceTasks.findIndex(task => task.id === id), 1);
+      const [movedTask] = sourceTasks.splice(
+        sourceTasks.findIndex((task) => task.id === id),
+        1
+      );
       destinationTasks.push(movedTask);
       sourceColumnData.tasks = sourceTasks;
       destinationColumnData.tasks = destinationTasks;
-  
+
       dispatch(
         setTasksData({
           ...tasks,
@@ -91,16 +96,24 @@ const TaskCard = ({
           [destinationColumnId]: destinationColumnData,
         })
       );
-  
 
       try {
-        await updateTaskColumn(id, newStatus); 
+        await updateTaskColumn(id, newStatus);
       } catch (error) {
         console.error("Failed to update task status:", error);
       }
     }
   };
-  
+  const deleteTask = async () => {
+    try {
+      await deleteTaskApi(id);
+
+      const columnId = status;
+      dispatch(deleteTaskAction({ taskId: id, columnId }));
+    } catch (err) {
+      console.error("Error deleting task:", err);
+    }
+  };
 
   return (
     <Dialog>
@@ -178,6 +191,12 @@ const TaskCard = ({
             </SelectContent>
           </Select>
         </div>
+        <Button
+          className="bg-red-600 hover:bg-red-600 hover:opacity-75"
+          onClick={deleteTask}
+        >
+          Delete Task
+        </Button>
       </DialogContent>
     </Dialog>
   );
