@@ -15,11 +15,13 @@ export interface Subtask {
 export interface Task {
   id: string;
   title: string;
+  description:string;
   subtasks: Subtask[];
 }
 export interface TaskCardType {
   id: string;
   title: string;
+  description: string;
   subtasks: Subtask[];
   index:number;
 }

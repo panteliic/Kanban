@@ -45,7 +45,7 @@ function UserProfile({ text }: { text: boolean }) {
           }`}
         >
           <Avatar>
-            <AvatarImage src={user?.avatar} />
+            <AvatarImage src={user?.avatar} alt="user profile image"/>
             <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
           </Avatar>
 

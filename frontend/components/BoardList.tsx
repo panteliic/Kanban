@@ -1,8 +1,7 @@
 "use client"
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/store";
-import { setLoading } from "@/redux/LoadingSlice";
+import { RootState } from "@/store";  
 import { setBoards } from "@/redux/boardSlice";
 import { usePathname } from "next/navigation";
 import { fetchBoards } from "@/utils/boardsList"; 
@@ -22,7 +21,6 @@ function BoardList() {
 
     const fetchData = async () => {
       try {
-        dispatch(setLoading(true));
         const boardsData = await fetchBoards(userId); 
 
         if (Array.isArray(boardsData)) {
@@ -33,8 +31,6 @@ function BoardList() {
       } catch (err) {
         console.error("Error fetching boards:", err);
         dispatch(setBoards([])); 
-      } finally {
-        dispatch(setLoading(false));
       }
     };
 

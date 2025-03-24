@@ -14,6 +14,7 @@ import UserProfile from "./UserProfile";
 import { usePathname, useRouter } from "next/navigation";
 import { deleteBoard as deleteBoardAction } from "@/redux/boardSlice";
 import { deleteBoardApi } from "@/utils/deleteBoard";
+import EditBoard from "./EditBoard";
 
 function Navbar() {
   const lightMode = useSelector((state: RootState) => state.theme.lightMode);
@@ -106,10 +107,8 @@ function Navbar() {
                     className="w-1"
                   />
                 </PopoverTrigger>
-                <PopoverContent className="flex flex-col gap-3 bg-background border-0 mr-20 mt-5 w-60 shadow-lg">
-                  <span className="cursor-pointer font-semibold capitalize text-muted-foreground transition hover:opacity-65">
-                    edit board
-                  </span>
+                <PopoverContent className="flex flex-col items-start gap-3 bg-background border-0 mr-20 mt-5 w-60 shadow-lg">
+                  <EditBoard />
                   <span
                     className="cursor-pointer font-semibold capitalize text-red-500 transition hover:opacity-65"
                     onClick={deleteBoard}
