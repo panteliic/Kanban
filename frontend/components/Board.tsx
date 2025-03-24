@@ -6,7 +6,7 @@ import { setLoading } from "@/redux/LoadingSlice";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { setTasksData } from "@/redux/taskSlice";
+import { moveTask, setTasksData } from "@/redux/taskSlice";
 import { fetchBoardData } from "@/utils/fetchBoardData";
 import { updateTaskColumn } from "@/utils/updateTaskColumn";
 const KanbanBoard = () => {
@@ -40,46 +40,28 @@ const KanbanBoard = () => {
   const onDragEnd = async (result: DropResult) => {
     setIsDragging(false);
     const { source, destination } = result;
-
+  
     if (!destination) return;
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    )
-      return;
-
-    const updatedTasks = { ...tasks };
-
-    const startColumnData = { ...updatedTasks[source.droppableId] };
-    const endColumnData =
-      source.droppableId === destination.droppableId
-        ? startColumnData
-        : { ...updatedTasks[destination.droppableId] };
-
-    const startTasks = [...startColumnData.tasks];
-    const endTasks =
-      source.droppableId === destination.droppableId
-        ? startTasks
-        : [...endColumnData.tasks];
-
-    const [movedTask] = startTasks.splice(source.index, 1);
-    endTasks.splice(destination.index, 0, movedTask);
-
-    startColumnData.tasks = startTasks;
-    endColumnData.tasks = endTasks;
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+  
+    const taskId = tasks[source.droppableId].tasks[source.index].id;
+    const sourceColumnId = source.droppableId;
+    const destinationColumnId = destination.droppableId;
+  
 
     dispatch(
-      setTasksData({
-        ...tasks,
-        [source.droppableId]: startColumnData,
-        [destination.droppableId]: endColumnData,
+      moveTask({
+        taskId,
+        sourceColumnId,
+        destinationColumnId,
+        sourceIndex: source.index,
+        destinationIndex: destination.index,
       })
     );
-
     try {
-      await updateTaskColumn(movedTask.id, destination.droppableId);
+      await updateTaskColumn(taskId, destinationColumnId);  
     } catch (error) {
-      console.error("Error updating task column:", error);
+      console.error("Error updating task column on the server:", error);
     }
   };
 

@@ -39,6 +39,7 @@ const Column = ({ columnId, columnName, tasks }: ColumnProps) => {
                 title={task.title}
                 description={task.description}
                 subtasks={task.subtasks}
+                status={columnId}
                 index={index}
               />
             ))}
