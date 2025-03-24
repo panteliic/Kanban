@@ -13,7 +13,7 @@ interface Task {
 }
 
 interface Column {
-  id: string; // Added id field to identify the column
+  id: string;
   name: string;
 }
 
@@ -39,8 +39,16 @@ const tasksSlice = createSlice({
     setTasksData(state, action: PayloadAction<ColumnsData>) {
       state.tasks = action.payload;
     },
+    updateColumnName(state, action: PayloadAction<{ columnId: string; newName: string }>) {
+      const { columnId, newName } = action.payload;
+
+      const columnData = state.tasks[columnId];
+      if (columnData) {
+        columnData.column.name = newName;
+      }
+    },
   },
 });
 
-export const { setTasksData } = tasksSlice.actions;
+export const { setTasksData, updateColumnName } = tasksSlice.actions;
 export default tasksSlice.reducer;
