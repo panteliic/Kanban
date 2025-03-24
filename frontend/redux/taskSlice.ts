@@ -9,7 +9,7 @@ interface Subtask {
 interface Task {
   id: string;
   title: string;
-  description:string;
+  description: string;
   subtasks: Subtask[];
 }
 
@@ -40,7 +40,10 @@ const tasksSlice = createSlice({
     setTasksData(state, action: PayloadAction<ColumnsData>) {
       state.tasks = action.payload;
     },
-    updateColumnName(state, action: PayloadAction<{ columnId: string; newName: string }>) {
+    updateColumnName(
+      state,
+      action: PayloadAction<{ columnId: string; newName: string }>
+    ) {
       const { columnId, newName } = action.payload;
 
       const columnData = state.tasks[columnId];
@@ -48,8 +51,41 @@ const tasksSlice = createSlice({
         columnData.column.name = newName;
       }
     },
+    deleteTaskAction(state, action: PayloadAction<{ taskId: string; columnId: string }>) {
+      const { taskId, columnId } = action.payload;
+      const column = state.tasks[columnId];
+
+      if (column) {
+        column.tasks = column.tasks.filter((task) => task.id !== taskId);
+      }
+    },
+    moveTask(
+      state,
+      action: PayloadAction<{
+        taskId: string;
+        sourceColumnId: string;
+        destinationColumnId: string;
+        sourceIndex: number;
+        destinationIndex: number;
+      }>
+    ) {
+      const {
+        taskId,
+        sourceColumnId,
+        destinationColumnId,
+        sourceIndex,
+        destinationIndex,
+      } = action.payload;
+      if (!state.tasks[sourceColumnId] || !state.tasks[destinationColumnId])
+        return;
+
+      const sourceColumn = state.tasks[sourceColumnId];
+      const destinationColumn = state.tasks[destinationColumnId];
+      const [movedTask] = sourceColumn.tasks.splice(sourceIndex, 1);
+      destinationColumn.tasks.splice(destinationIndex, 0, movedTask);
+    },
   },
 });
 
-export const { setTasksData, updateColumnName } = tasksSlice.actions;
+export const { setTasksData, updateColumnName, moveTask,deleteTaskAction} = tasksSlice.actions;
 export default tasksSlice.reducer;

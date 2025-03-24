@@ -7,15 +7,12 @@ const getStatusColor = (columnName: string): string => {
     todo: "bg-blue-500",
     doing: "bg-yellow-500",
     done: "bg-green-500",
+    default: "bg-gray-500", 
   };
 
-  return statusColors[columnName.toLowerCase()] || getRandomColor();
+  return statusColors[columnName.toLowerCase()] || statusColors.default;
 };
 
-const getRandomColor = (): string => {
-  const randomColors = ["bg-red-500", "bg-purple-500"];
-  return randomColors[Math.floor(Math.random() * randomColors.length)];
-};
 
 const Column = ({ columnId, columnName, tasks }: ColumnProps) => {
   const statusColor = getStatusColor(columnName);
@@ -42,6 +39,7 @@ const Column = ({ columnId, columnName, tasks }: ColumnProps) => {
                 title={task.title}
                 description={task.description}
                 subtasks={task.subtasks}
+                status={columnId}
                 index={index}
               />
             ))}
