@@ -13,26 +13,32 @@ export const updateBoard = async (req, res) => {
 
     if (!board) return res.status(404).json({ message: "Board not found" });
 
+
     board.title = title;
 
     if (columns && columns.length > 0) {
       const updatedColumns = await Promise.all(
-        columns.map(async (columnData: { id: string; name: string }) => {
-          const column = await AppDataSource.getRepository(BoardColumn).findOne(
-            {
-              where: { id: columnData.id },
-            }
-          );
+        columns.map(async (columnData: { id?: string; name: string }) => {
+          if (columnData.id) {
 
-          if (column) {
-            column.name = columnData.name;
-            return AppDataSource.getRepository(BoardColumn).save(column);
+            const column = await AppDataSource.getRepository(BoardColumn).findOne({
+              where: { id: columnData.id },
+            });
+
+            if (column) {
+              column.name = columnData.name;
+              return AppDataSource.getRepository(BoardColumn).save(column);
+            } else {
+              return null;
+            }
           } else {
-            return null;
+            const newColumn = new BoardColumn();
+            newColumn.name = columnData.name;
+            newColumn.board = board;  
+            return AppDataSource.getRepository(BoardColumn).save(newColumn);
           }
         })
       );
-
       board.columns = updatedColumns.filter((column) => column !== null);
     }
 
