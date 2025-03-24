@@ -40,6 +40,7 @@ const Column = ({ columnId, columnName, tasks }: ColumnProps) => {
                 key={task.id}
                 id={task.id}
                 title={task.title}
+                description={task.description}
                 subtasks={task.subtasks}
                 index={index}
               />
