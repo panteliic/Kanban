@@ -12,5 +12,5 @@ router.get("/getBoards/:userId", getUserBoards);
 router.get("/getBoardData/:boardId", getBoardData);
 router.post("/createNewTask", createNewTask);
 router.delete("/delete/:boardId", DeleteBoard);
-router.put("/updateBoard/:boardId", updateBoard);
+router.put("/updateBoard", updateBoard);
 export default router;
