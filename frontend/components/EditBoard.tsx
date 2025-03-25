@@ -48,8 +48,7 @@ function EditBoard() {
     console.log(currentBoardId,boardName,columns);
     
     try {
-      const response = await updateBoardAPI(currentBoardId, boardName, columns);
-      console.log(response);
+      await updateBoardAPI(currentBoardId, boardName, columns);
       
       dispatch(
         updateBoardTitle({ boardId: currentBoardId, newTitle: boardName })

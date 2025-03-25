@@ -25,6 +25,7 @@ const KanbanBoard = () => {
         setLoading(true);
         const boardData = await fetchBoardData(pathname);
         dispatch(setTasksData(boardData));
+        
       } catch (error) {
         console.error("Error fetching board data:", error);
       } finally {
@@ -53,7 +54,6 @@ const KanbanBoard = () => {
     const sourceColumnId = source.droppableId;
     const destinationColumnId = destination.droppableId;
 
-    // Ažuriraj stanje u Redux-u
     dispatch(
       moveTask({
         taskId,

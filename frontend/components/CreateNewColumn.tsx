@@ -13,6 +13,9 @@ import { RootState } from "@/store";
 import { usePathname } from "next/navigation";
 import { Board } from "@/types";
 import { useState } from "react";
+import { createNewColumnAPI } from "@/utils/createNewColumn";
+import { setTasksData } from "@/redux/taskSlice";
+import { fetchBoardData } from "@/utils/fetchBoardData";
 
 function CreateNewColumn() {
   const boards = useSelector((state: RootState) => state.board.boards);
@@ -26,11 +29,16 @@ function CreateNewColumn() {
   }
 
   const [newColumns, setNewColumns] = useState<string[]>([]);
+
+  // Proveravamo ukupan broj kolona (postojeće + nove) i ograničavamo na 5
+  const availableColumns = currentBoard ? currentBoard.columns.length + newColumns.length : 0;
+
   const addNewColumn = () => {
-    if (newColumns.length < 5) {
+    if (availableColumns < 5) {
       setNewColumns([...newColumns, ""]);
     }
   };
+
   const handleColumnChange = (index: number, value: string) => {
     const updatedColumns = [...newColumns];
     updatedColumns[index] = value;
@@ -39,21 +47,13 @@ function CreateNewColumn() {
 
   const saveChanges = async () => {
     if (currentBoard && newColumns.length > 0) {
-      const updatedColumns = [...currentBoard.columns, ...newColumns];
-
-      if (updatedColumns.length > 5) {
-        alert("You cannot add more than 5 columns.");
-        return;
-      }
-
-      /*try {
-        await updateBoard(currentBoard.id, { columns: updatedColumns });
-        // Ažuriraj Redux stanje (ako je potrebno)
-        dispatch({ type: "UPDATE_BOARD", payload: { ...currentBoard, columns: updatedColumns } });
-        setNewColumns([]); // Resetovanje unosa nakon uspešnog ažuriranja
+      try {
+        await createNewColumnAPI(currentBoard.id, newColumns);
+        const response = await fetchBoardData(currentBoard.id);
+        dispatch(setTasksData(response));
       } catch (error) {
         console.error("Error updating board:", error);
-      }*/
+      }
     }
   };
 
@@ -109,7 +109,7 @@ function CreateNewColumn() {
         </div>
 
         <div>
-          {newColumns.length < 5 && (
+          {availableColumns < 5 && (
             <Button
               type="button"
               onClick={addNewColumn}
