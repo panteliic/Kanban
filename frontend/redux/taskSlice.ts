@@ -51,6 +51,17 @@ const tasksSlice = createSlice({
         columnData.column.name = newName;
       }
     },
+    addColumns(
+      state,
+      action: PayloadAction<{ boardId: string; columns: Column[] }>
+    ) {
+      const { boardId, columns } = action.payload;
+      columns.forEach((column) => {
+        if (!state.tasks[column.id]) {
+          state.tasks[column.id] = { column, tasks: [] };
+        }
+      });
+    },    
     deleteTaskAction(state, action: PayloadAction<{ taskId: string; columnId: string }>) {
       const { taskId, columnId } = action.payload;
       const column = state.tasks[columnId];

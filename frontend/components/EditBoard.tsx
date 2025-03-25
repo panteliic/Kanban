@@ -45,8 +45,11 @@ function EditBoard() {
 
   const handleSaveChanges = async () => {
     if (!currentBoardId) return;
+    console.log(currentBoardId,boardName,columns);
+    
     try {
       await updateBoardAPI(currentBoardId, boardName, columns);
+      
       dispatch(
         updateBoardTitle({ boardId: currentBoardId, newTitle: boardName })
       );

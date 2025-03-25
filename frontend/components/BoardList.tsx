@@ -1,10 +1,10 @@
-"use client"
+"use client";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/store";  
+import { RootState } from "@/store";
 import { setBoards } from "@/redux/boardSlice";
 import { usePathname } from "next/navigation";
-import { fetchBoards } from "@/utils/boardsList"; 
+import { fetchBoards } from "@/utils/boardsList";
 import SideBarButton from "./SideBarButton";
 import CreateNewBoard from "./CreateNewBoard";
 import { Board } from "@/types";
@@ -21,37 +21,36 @@ function BoardList() {
 
     const fetchData = async () => {
       try {
-        const boardsData = await fetchBoards(userId); 
+        const boardsData = await fetchBoards(userId);
 
         if (Array.isArray(boardsData)) {
           dispatch(setBoards(boardsData));
         } else {
-          dispatch(setBoards([])); 
+          dispatch(setBoards([]));
         }
       } catch (err) {
         console.error("Error fetching boards:", err);
-        dispatch(setBoards([])); 
+        dispatch(setBoards([]));
       }
     };
 
     fetchData();
-  }, [userId, dispatch, boards.length, pathname]); 
+  }, [userId, dispatch, boards.length, pathname]);
 
   return (
-    <div>
-      <h3 className="text-muted-foreground font-medium uppercase px-5 mb-5">
+    <div className="overflow-auto">
+      <h3 className="text-muted-foreground font-medium uppercase px-5 mb-5 ">
         All Boards ({boards.length})
       </h3>
       <ul>
-        {boards.length > 0 && (
-          boards.map((board: Board) => (  
+        {boards.length > 0 &&
+          boards.map((board: Board) => (
             <SideBarButton
               key={board.id}
               boardName={board.title}
               boardId={board.id}
             />
-          ))
-        )}
+          ))}
       </ul>
       <CreateNewBoard />
     </div>

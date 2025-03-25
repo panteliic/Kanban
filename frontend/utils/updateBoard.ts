@@ -7,7 +7,8 @@ async function updateBoardAPI(
   columns: Column[]
 ): Promise<Board> {
   try {
-    const response = await api.put(`/boards/updateBoard/${boardId}`, {
+    const response = await api.put(`/boards/updateBoard`, {
+      boardId,
       title,
       columns,
     });
