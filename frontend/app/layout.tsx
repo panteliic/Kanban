@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  manifest:"/manifest.json",
   title: "Kanban | Task Management System",
   description:
     "Kanban is an intuitive task management system that enhances productivity through visual work organization.",
