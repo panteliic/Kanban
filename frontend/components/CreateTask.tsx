@@ -63,9 +63,10 @@ function CreateTask() {
   ) as Board[];
   const pathname = usePathname();
   const boardId: string | undefined = pathname?.split("/").pop();
-  const currentBoard: Board | undefined = boards.find(
-    (board) => board.id === boardId
-  );
+  let currentBoard: Board | undefined;
+  if (Array.isArray(boards))
+    currentBoard = boards.find((board) => board.id === boardId);
+  
   const columns: Column[] = currentBoard?.columns || [];
 
   const handleCreateTask = async () => {

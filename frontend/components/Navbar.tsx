@@ -37,7 +37,7 @@ function Navbar() {
 
   const currentBoardId = pathname?.split("/").pop();
   let currentBoard;
-  if (currentBoardId !== "")
+  if (currentBoardId && Array.isArray(boards))
     currentBoard = boards.find((board) => board.id === currentBoardId);
 
   const deleteBoard = async () => {

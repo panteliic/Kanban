@@ -24,13 +24,12 @@ function CreateNewColumn() {
   const pathname = usePathname();
   const currentBoardId = pathname?.split("/").pop();
   let currentBoard: Board | undefined;
-  if (currentBoardId !== "") {
+  if (Array.isArray(boards) && currentBoardId !== "") {
     currentBoard = boards.find((board) => board.id === currentBoardId);
   }
 
   const [newColumns, setNewColumns] = useState<string[]>([]);
 
-  // Proveravamo ukupan broj kolona (postojeće + nove) i ograničavamo na 5
   const availableColumns = currentBoard ? currentBoard.columns.length + newColumns.length : 0;
 
   const addNewColumn = () => {
