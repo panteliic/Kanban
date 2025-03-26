@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 
 function Page() {
-  console.log(`${process.env.NEXT_PUBLIC_API_URL}/auth/google `);
-  
+
   const login = () => {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   };
