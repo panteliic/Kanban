@@ -59,6 +59,8 @@ This project is built with **Next.js** on the frontend for server-side rendering
    DB_NAME=<YOUR_DATABASE_NAME>
    JWT_ACCESS_SECRET=<YOUR_ACCEES_JWT_SECRET>
    JWT_REFRESH_SECRET=<YOUR_REFRESH_JWT_SECRET>
+   CLIENT_URL=<YOUR_CLIENT_URL>
+   GOOGLE_CALLBACK_URL=<YOUR_GOOGLE_CALLBACK_URL>
    ```
 
 3. **Run the backend server:**
@@ -74,18 +76,24 @@ This project is built with **Next.js** on the frontend for server-side rendering
    ```bash
    cd ../frontend
    ```
+2. **Set up environment variables:**
 
-2. **Install dependencies:**
+   Create a `.env` file in the backend directory and add the following variables:
+
+   ```ini
+   NEXT_PUBLIC_API_URL=<YOUR_API_URL>
+   ```
+3. **Install dependencies:**
    ```bash
    npm install
    ```
 
-3. **Run the frontend server:**
+4. **Run the frontend server:**
    ```bash
    npm run dev
    ```
 
-4. **Open the app in your browser:**
+5. **Open the app in your browser:**
    Navigate to [http://localhost:3000](http://localhost:3000).
 
 ---
