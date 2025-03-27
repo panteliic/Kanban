@@ -40,7 +40,9 @@ function Navbar() {
   if (!mounted) return null;
 
   const currentBoardId = pathname?.split("/").pop();
-  const currentBoard = boards?.find((board) => board.id === currentBoardId) || null;
+  let currentBoard;
+  if (currentBoardId && Array.isArray(boards))
+    currentBoard = boards.find((board) => board.id === currentBoardId);
 
   const deleteBoard = async () => {
     if (!currentBoardId) return;
