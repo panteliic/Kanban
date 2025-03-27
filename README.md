@@ -1,5 +1,5 @@
 # Kanban – Project Management System
-![Kanban Board](https://ibb.co/0yF7JP9w)
+![Kanban Board Preview](board1.png)
 ## Overview
 
 The Kanban Project Management System is a full-stack application designed to help teams organize tasks efficiently using the Kanban methodology. The application offers features such as task organization, drag-and-drop functionality for seamless workflow management, and secure authentication using JWT tokens.
