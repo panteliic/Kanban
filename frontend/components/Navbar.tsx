@@ -20,11 +20,13 @@ function Navbar() {
   const lightMode = useSelector((state: RootState) => state.theme.lightMode);
   const boards = useSelector((state: RootState) => state.board.boards);
   const dispatch = useDispatch();
-  const [mobile, setMobile] = useState(false);
+  const [mobile, setMobile] = useState<boolean | null>(null);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
+    setMounted(true);
     const checkScreenSize = () => {
       setMobile(window.innerWidth <= 768);
     };
@@ -35,10 +37,10 @@ function Navbar() {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  if (!mounted) return null;
+
   const currentBoardId = pathname?.split("/").pop();
-  let currentBoard;
-  if (currentBoardId && Array.isArray(boards))
-    currentBoard = boards.find((board) => board.id === currentBoardId);
+  const currentBoard = boards?.find((board) => board.id === currentBoardId) || null;
 
   const deleteBoard = async () => {
     if (!currentBoardId) return;
@@ -50,69 +52,39 @@ function Navbar() {
       console.error("Error deleting board:", err);
     }
   };
+
   return (
     <div className="w-full h-24 border-b-2 border-border bg-background flex items-center justify-between">
       <div className="w-auto md:w-[20rem] h-full border-0 md:border-r-2 border-border flex items-center px-5">
-        {mobile ? (
+        {mobile !== null && (mobile ? (
           <div className="flex items-center gap-4">
-            <Image
-              src={"/assets/logo-mobile.svg"}
-              alt="Logo"
-              width={50}
-              height={50}
-              className="w-7"
-            />
+            <Image src="/assets/logo-mobile.svg" alt="Logo" width={50} height={50} className="w-7" />
             <MobileTaskBoard />
           </div>
         ) : !lightMode ? (
-          <Image
-            src={"/assets/logo-light.svg"}
-            alt="Logo"
-            width={100}
-            height={100}
-            className="w-36"
-          />
+          <Image src="/assets/logo-light.svg" alt="Logo" width={100} height={100} className="w-36" />
         ) : (
-          <Image
-            src={"/assets/logo-dark.svg"}
-            alt="Logo"
-            width={100}
-            height={100}
-            className="w-36"
-          />
-        )}
+          <Image src="/assets/logo-dark.svg" alt="Logo" width={100} height={100} className="w-36" />
+        ))}
       </div>
 
-      <div
-        className={`px-5 flex items-center md:w-[calc(100vw-20rem)] ${
-          pathname === "/" ? " justify-end" : "justify-between"
-        }`}
-      >
+      <div className={`px-5 flex items-center md:w-[calc(100vw-20rem)] ${pathname === "/" ? " justify-end" : "justify-between"}`}>
         {pathname !== "/" && (
           <h1 className="text-2xl font-semibold text-foreground hidden md:flex">
             {currentBoard ? currentBoard.title : "Board Not Found"}
           </h1>
         )}
-        <div className="flex gap-5 items-center ">
+        <div className="flex gap-5 items-center">
           {pathname !== "/" && (
             <>
               <CreateTask />
               <Popover>
                 <PopoverTrigger className="p-0 bg-transparent hover:bg-transparent active:bg-transparent">
-                  <Image
-                    src={"/assets/icon-vertical-ellipsis.svg"}
-                    alt="settings board"
-                    width={100}
-                    height={100}
-                    className="w-1"
-                  />
+                  <Image src="/assets/icon-vertical-ellipsis.svg" alt="settings board" width={100} height={100} className="w-1" />
                 </PopoverTrigger>
                 <PopoverContent className="flex flex-col items-start gap-3 bg-background border-0 mr-20 mt-5 w-60 shadow-lg">
                   <EditBoard />
-                  <span
-                    className="cursor-pointer font-semibold capitalize text-red-500 transition hover:opacity-65"
-                    onClick={deleteBoard}
-                  >
+                  <span className="cursor-pointer font-semibold capitalize text-red-500 transition hover:opacity-65" onClick={deleteBoard}>
                     delete board
                   </span>
                 </PopoverContent>

@@ -47,9 +47,9 @@ const TaskCard = ({
 
   const pathname = usePathname();
   const boardId: string | undefined = pathname?.split("/").pop();
-  const currentBoard: Board | undefined = boards.find(
-    (board) => board.id === boardId
-  );
+  let currentBoard: Board | undefined;
+  if (boardId && Array.isArray(boards))
+    boards.find((board) => board.id === boardId);
   const columns: Column[] = currentBoard?.columns || [];
   const dispatch = useDispatch();
   const handleSubtaskChange = async (subtaskId: string) => {
